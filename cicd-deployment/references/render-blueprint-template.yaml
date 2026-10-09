@@ -1,0 +1,22 @@
+services:
+  # Production Frontend / Web Service (main branch)
+  # LOCKED DOWN: autoDeploy is explicitly disabled to guarantee unpinned commits never ship to production.
+  - type: web
+    name: project-name-prod
+    env: static # or 'node', 'docker', 'python'
+    rootDir: frontend # or '.'
+    buildCommand: npm install; npm run build
+    staticPublishPath: dist
+    branch: main
+    autoDeploy: false
+
+  # Development Frontend / Web Service (dev branch)
+  # CONTINUOUS: autoDeploy is enabled for rapid dogfooding and QA verification.
+  - type: web
+    name: project-name-dev
+    env: static # or 'node', 'docker', 'python'
+    rootDir: frontend # or '.'
+    buildCommand: npm install; npm run build
+    staticPublishPath: dist
+    branch: dev
+    autoDeploy: true

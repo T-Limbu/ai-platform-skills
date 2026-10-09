@@ -1,0 +1,277 @@
+Title: YouTube Video (EcbgbKtOELY)
+ID: EcbgbKtOELY
+
+[00:00] If you want to get good at UI UX design,
+[00:02] you got to start with the basics. So,
+[00:04] let's begin.
+[00:08] This one's easiest to explain with an
+[00:09] example first. If I have three text and
+[00:12] icon pairs, but I put a container around
+[00:14] drinks and food, you know that they're
+[00:15] related and dessert is not. Then, if I
+[00:18] put a container around drinks, you know
+[00:20] that it's selected and you can toggle
+[00:21] over to food. If I gray this text out,
+[00:23] you know that it's inactive and clicking
+[00:25] it probably won't do anything. See how
+[00:27] you just knew all of that? I didn't need
+[00:29] to write instructions on how it worked
+[00:31] because the UI was signifying how things
+[00:33] worked. Good UI has many signifiers,
+[00:35] like a button press state, highlights on
+[00:38] active nav items, hover states, or even
+[00:40] tooltips to tell the user what a UI
+[00:42] affords or what it can do.
+[00:47] Now, take a look at this card. It
+[00:48] displays all of the information in a
+[00:50] logical, repeatable format, but it looks
+[00:53] like a spreadsheet, not a design. So,
+[00:55] let's give it some hierarchy, which is
+[00:57] pretty intuitive. We have size,
+[00:59] position, and color to use to our
+[01:00] advantage. Starting from the top, an
+[01:02] image always adds a great pop of color
+[01:05] and makes scanning super easy, just like
+[01:07] Uber. If in this case the item is the
+[01:09] most important, we want that large and
+[01:11] bold and at the top because otherwise
+[01:13] it'll blend in with something like the
+[01:14] time and date, which can be below and
+[01:16] much smaller. And it's this contrast,
+[01:18] the difference between small and big or
+[01:21] colorful and not, that actually creates
+[01:23] the hierarchy. It's also why price
+[01:25] should be at the top, right aligned, and
+[01:27] blue. It's different than the rest,
+[01:28] which draws the eye to it. The location
+[01:30] should be smaller and below like this.
+[01:32] But, instead of just from and to, we can
+[01:34] use icons and align to demonstrate that
+[01:36] it's moving from Jamesville to Syracuse
+[01:39] without having to actually say that.
+[01:41] Now, with that said, it's not an exact
+[01:43] science and you could definitely end up
+[01:45] with a design that looks like this
+[01:46] instead and it wouldn't be wrong. But,
+[01:48] the same ideas apply. Most important
+[01:50] things near the top, bigger and colorful
+[01:52] is more important, and images are used
+[01:54] whenever possible. And as you start to
+[01:55] design more and more, you'll notice that
+[01:57] similar patterns arise when you need
+[01:59] labels or buttons, which we're going to
+[02:01] talk about in a minute.
+[02:02] >> [music]
+[02:05] >> Now, some people have this misconception
+[02:07] that all of your content needs to align
+[02:09] to a 12-column grid and be exactly eight
+[02:11] pixels apart. But, these are just
+[02:14] guidelines. For example, this design
+[02:15] doesn't line up with any of the columns
+[02:18] and that's not uncommon, especially for
+[02:20] custom landing pages. But, for highly
+[02:22] structured pages like galleries, blogs,
+[02:24] or any repeating content, they can
+[02:26] actually be useful for responsiveness by
+[02:28] giving guidelines for responsive
+[02:29] behavior on tablet [music] with eight
+[02:31] columns and mobile with four. But, much
+[02:33] more important than using excessive
+[02:35] grids and layouts is white space,
+[02:37] letting things breathe. For example, in
+[02:40] a simple section like this, the large
+[02:41] text would have a font size and line
+[02:43] height like this and the subtext would
+[02:45] have a font size and line height like
+[02:46] so. Buttons would be similar and
+[02:48] optionally a top announcement bar like
+[02:50] this. [music] Then, simply 32 pixels
+[02:52] between every item, but you can also
+[02:54] group elements that just go together
+[02:57] like the announcement and text or the
+[02:59] text and subtext, [music] which is just
+[03:00] another form of visual hierarchy. And
+[03:03] this is where we see the four-point grid
+[03:05] system actually come into play.
+[03:06] Everything is a multiple, not because it
+[03:08] inherently looks better, but because you
+[03:10] can always split things in half, which
+[03:12] creates consistency throughout a design.
+[03:15] >> [music]
+[03:17] >> Typography is really interesting because
+[03:20] design is mostly just text. And for
+[03:23] picking a font, I can almost
+[03:24] unilaterally say you'll never need more
+[03:26] than one for any design. So, find a nice
+[03:29] sans serif font like the ones on screen
+[03:31] and stick to it. Over the last seven
+[03:33] years of designing, I've rarely used
+[03:35] [music] any fonts other than what's on
+[03:37] screen and this shouldn't be where
+[03:38] you're spending tons of time. I'm also
+[03:40] not a big fan of calling any design
+[03:42] skill a hack, but this one kind of is.
+[03:45] This design looks okay right now, but
+[03:47] our header text feels a little too
+[03:49] loose. If you tighten up the letter
+[03:50] spacing on this by about -2% to -3% and
+[03:54] drop the line height to about 110% to
+[03:56] 120%, it instantly makes any larger text
+[03:59] look super pro real fast. But, hierarchy
+[04:02] with typography is a little bit more
+[04:04] nuanced. And if we look at our previous
+[04:06] example, text sizes can vary wildly. For
+[04:09] landing pages and websites, you
+[04:10] generally don't want more than six font
+[04:12] sizes, which can have a really large
+[04:14] range. For things like dashboards, that
+[04:15] range shrinks dramatically [music] to
+[04:17] where you don't normally have text sizes
+[04:19] larger than 24 pixels because of the
+[04:21] increase in information density. But,
+[04:24] honestly, one of the most important
+[04:25] concepts of design is getting
+[04:27] inspiration and doing research from a
+[04:28] good source, like today's sponsor,
+[04:30] Mobbin, who curates hundreds of
+[04:32] thousands of mobile and web apps along
+[04:34] with landing pages, too. So, you can
+[04:36] always pull inspiration from real
+[04:37] designs built by the top design teams in
+[04:40] the world. [music] And if you're
+[04:41] struggling with a specific section, just
+[04:43] go and search for it and instantly pull
+[04:45] up real-world examples with links to the
+[04:47] live sites, too. If you're interested,
+[04:49] you can check out Mobbin using the first
+[04:50] link down below to get 20% off. Now,
+[04:53] back to the video.
+[04:54] >> [music]
+[04:57] >> Colors are difficult and everyone has
+[04:59] their own taste, but I'm a big fan of
+[05:01] starting with one primary color.
+[05:03] Generally, this is your brand color.
+[05:05] Then, you can lighten it for a good
+[05:06] background or darken it for text colors.
+[05:08] Both good ways to incorporate subtle
+[05:10] color and make an otherwise drab design
+[05:12] look much more interesting. And with all
+[05:14] of that, we're already halfway to a
+[05:16] color ramp, which is what large
+[05:18] companies use to build out chips,
+[05:19] states, charts, and really anything
+[05:21] else. But, I also think it's important
+[05:23] as a beginner to let the color find you.
+[05:25] Like an announcement bar to grab
+[05:27] attention or a focus state on an input
+[05:30] or the green new chip on a link. These
+[05:31] are all semantic colors, which are
+[05:33] colors that have meaning and provide
+[05:35] signifiers to the user. Blue for trust,
+[05:37] red for danger or urgency, yellow for
+[05:39] warning, and green for success. Make
+[05:41] sure you use color for purpose, not just
+[05:44] for decoration.
+[05:45] >> [music]
+[05:48] >> Now, designing in dark mode presents
+[05:50] some pretty interesting challenges for
+[05:52] us. First, this card is using a light
+[05:54] border, which creates a bit too much
+[05:55] contrast. So, we'll lower that down. In
+[05:57] dark mode, we don't have shadows like
+[05:59] light mode, so to create depth, we need
+[06:01] to have a lighter card than the
+[06:02] background. So, I'll make that
+[06:04] adjustment. This chip is also far too
+[06:06] bright, so we can dim down the
+[06:07] saturation and brightness and flip that
+[06:10] for the text to create some hierarchy.
+[06:12] There's also a ton of flexibility for
+[06:14] deep purples, reds, or greens, not just
+[06:16] navy blue or gray.
+[06:19] >> [music]
+[06:21] >> But, speaking of depth, shadows are a
+[06:23] fantastic tool to use on light mode.
+[06:25] This shadow, along with most, is too
+[06:27] strong. So, reducing the opacity and
+[06:29] dialing up the blur helps a lot. The
+[06:32] strength you'll need depends on the
+[06:33] foreground and background, but cards
+[06:35] require less while content that sits
+[06:37] above other content like popovers will
+[06:39] need stronger shadows. We can even use
+[06:41] these techniques with inner and outer
+[06:43] shadows to create effects like raised
+[06:45] tactile buttons. Just remember, if the
+[06:47] shadow is the first thing you notice on
+[06:49] a design, you're not using it right.
+[06:51] >> [music]
+[06:54] >> Now, to create strong designs, you'll
+[06:56] need icons. Most icons are generally too
+[06:59] large, so the trick is to get the line
+[07:01] height of your font, in this case 24
+[07:03] pixels, and make the icons the same size
+[07:05] and then tighten up the text. Sidebar
+[07:07] links like this are actually just
+[07:08] buttons without a background until you
+[07:10] hover, which are often called ghost
+[07:12] buttons. And if we isolate one and
+[07:13] center it, we've got a perfect
+[07:15] standalone button. These are super
+[07:17] common when you have a primary and
+[07:18] secondary CTA side by side. And a good
+[07:21] guideline for padding on these is to
+[07:22] double the height for the width. And
+[07:25] these can be done with or without icons,
+[07:27] too.
+[07:31] A good rule of design is when a user
+[07:33] does anything, there should be a
+[07:35] response. For example, every button
+[07:37] needs at least four states: default,
+[07:39] hovered, active or pressed, and
+[07:41] disabled. Sometimes you'll need a
+[07:42] loading state, too, with a spinner.
+[07:44] Inputs are even more critical. You'll
+[07:46] need a focus state when the user clicks
+[07:48] in, error states with red borders and
+[07:49] messages when something's wrong, and
+[07:51] sometimes even warning states for
+[07:53] optional issues. And this applies
+[07:55] everywhere. Loading spinners when data
+[07:57] is fetching, success messages when an
+[07:59] action completes, even micro animations
+[08:01] on scroll or swipe. Every interaction
+[08:04] needs a response.
+[08:08] And that brings us wonderfully into
+[08:10] micro interactions. Micro interactions
+[08:12] are a form of feedback, but they step
+[08:15] things up a notch. For example, this
+[08:17] copy button has states and feedback when
+[08:19] we hover and click, but we still don't
+[08:21] know that we've copied anything.
+[08:23] Instead, if we have this chip slide up,
+[08:25] that's a micro interaction that confirms
+[08:28] our action. And these can range from
+[08:30] highly practical to much more fun and
+[08:32] playful.
+[08:37] Finally, overlays are really important
+[08:39] because if you screw them up, you're
+[08:40] going to ruin the image and the text,
+[08:42] too. In this case, we can't leave it as
+[08:44] is, so we could add in a full-screen
+[08:46] overlay, but it doesn't do the image
+[08:48] justice. So, instead, add in a linear
+[08:50] gradient that'll display the image then
+[08:52] smoothly converge into a text-readable
+[08:54] background. Or, if we're going for extra
+[08:57] fancy, we can add in a progressive blur
+[08:59] on top of the gradient for an even more
+[09:01] modern look. And that is more or less
+[09:04] every UI UX concept all wrapped up in 10
+[09:07] minutes. If you want to check out
+[09:08] Mobbin, it will be the first link down
+[09:10] below and you can get the link to all of
+[09:12] the Figma assets used in this video down
+[09:14] there, too. Thank you so much for
+[09:16] watching and I will see you in the next
+[09:17] one.

@@ -1,0 +1,58 @@
+name: On-Demand UI/UX Knowledge Distiller (Gemini)
+
+on:
+  workflow_dispatch:
+    inputs:
+      video_url_or_id:
+        description: 'YouTube Video URL or 11-char Video ID (e.g. https://www.youtube.com/watch?v=EcbgbKtOELY)'
+        required: true
+        type: string
+      video_title:
+        description: 'Optional Title / Attribution for the video'
+        required: false
+        default: 'YouTube UI/UX Masterclass'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  distill:
+    name: Distill Video & Update UI/UX Skill
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Skills Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install youtube-transcript-api google-genai
+
+      - name: Run Distillation with Gemini LLM
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python ui-ux-design/scripts/distill_ui_ux.py --url "${{ inputs.video_url_or_id }}"
+
+      - name: Commit Updated Skill Playbooks
+        run: |
+          git config --global user.name "Gemini Distiller Bot"
+          git config --global user.email "bot@squad-hq.internal"
+
+          git add ui-ux-design/
+          
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "feat(ui-ux-design): distill insights from ${{ inputs.video_url_or_id }} [skip ci]"
+            git push origin HEAD
+            echo "Successfully committed evolved skill playbooks!"
+          else
+            echo "No changes detected."
+          fi

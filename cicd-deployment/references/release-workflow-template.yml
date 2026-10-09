@@ -1,0 +1,114 @@
+name: Production Release & Version Deployment
+
+on:
+  release:
+    types: [published]
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      commit_sha:
+        description: 'Commit SHA or Tag to deploy (Leave empty to deploy latest on main)'
+        required: false
+        type: string
+        default: ''
+      clear_cache:
+        description: 'Clear Render build cache?'
+        required: true
+        type: choice
+        options:
+          - 'do_not_clear'
+          - 'clear'
+        default: 'do_not_clear'
+
+permissions:
+  contents: write
+
+env:
+  # Configure your Render service ID (e.g. srv-xxxxxxxxxxxxxxxxxxxx)
+  RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
+
+jobs:
+  build-and-deploy:
+    name: Package & Deploy Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.commit_sha != '' && inputs.commit_sha || github.sha }}
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: |
+          npm ci || npm install
+
+      - name: Run Test Suite Guard
+        run: |
+          npm test
+
+      - name: Build Production Bundle
+        run: |
+          npm run build
+
+      - name: Package Dist Artifact (Zip)
+        run: |
+          VERSION="${{ github.ref_name }}"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="manual-${GITHUB_SHA::7}"
+          fi
+          # Target build directory (adjust to your project's dist/build path)
+          cd dist
+          zip -r ../project-${VERSION}.zip .
+          cd ..
+
+      - name: Archive Build Artifact in Workflow
+        uses: actions/upload-artifact@v4
+        with:
+          name: project-dist
+          path: dist/
+          retention-days: 30
+
+      - name: Attach Package to GitHub Release
+        if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: project-*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy Pinned Version to Render Production
+        run: |
+          TARGET_COMMIT="${{ inputs.commit_sha != '' && inputs.commit_sha || github.sha }}"
+          CLEAR_CACHE="${{ inputs.clear_cache || 'do_not_clear' }}"
+
+          echo "Deploying target commit: ${TARGET_COMMIT} to Render service ${RENDER_SERVICE_ID}..."
+
+          RESPONSE=$(curl -fsSL -X POST "https://api.render.com/v1/services/${RENDER_SERVICE_ID}/deploys" \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"commitId\": \"${TARGET_COMMIT}\", \"clearCache\": \"${CLEAR_CACHE}\"}")
+
+          echo "Render API Response:"
+          echo "${RESPONSE}"
+
+          DEPLOY_ID=$(echo "${RESPONSE}" | grep -o '"id":"[^"]*' | head -n 1 | cut -d '"' -f 4)
+          echo "Triggered Render Deploy ID: ${DEPLOY_ID}"
+          echo "DEPLOY_ID=${DEPLOY_ID}" >> $GITHUB_ENV
+          echo "DEPLOY_COMMIT=${TARGET_COMMIT}" >> $GITHUB_ENV
+
+      - name: Generate Deployment Summary
+        if: always()
+        run: |
+          echo "### 🚀 Production Deployment Report" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status:** ${{ job.status == 'success' && '✅ Deployed' || '❌ Failed' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Target Commit:** \`${{ env.DEPLOY_COMMIT || github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Render Deploy ID:** \`${{ env.DEPLOY_ID || 'N/A' }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Render Dashboard:** [View Service Events](https://dashboard.render.com/static/${{ env.RENDER_SERVICE_ID }})" >> $GITHUB_STEP_SUMMARY

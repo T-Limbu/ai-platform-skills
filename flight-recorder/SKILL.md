@@ -1,22 +1,34 @@
 ---
 name: flight-recorder
-description: Architecture, specification, and drop-in blueprint for the mandatory in-app Black Box Flight Recorder & Diagnostic Drawer required on all QA and staging services. Provides local ring buffering, localStorage persistence, OS lifecycle interception, unhandled error catching, 1-tap clipboard export, and remote cloud telemetry streaming.
+description: Use when building or reviewing a client-facing app, PWA or frontend for a QA or staging environment, or when diagnosing bugs on physical phones. Specifies the mandatory in-app Black Box Flight Recorder with ring buffer, localStorage persistence, lifecycle and error capture, 1-tap copy and optional cloud telemetry.
+version: 1.0.0
 ---
 
-# 🐞 In-App Black Box Flight Recorder Standard (Mandatory QA Feature)
+# In-App Black Box Flight Recorder Standard (Mandatory QA Feature)
 
 **Organization Invariant:** Every client-facing application, PWA, or frontend service deployed to a **QA environment** (`qa`, staging, or local mobile dogfooding) must include the in-app **Black Box Flight Recorder** (`flightRecorder.ts`).
 
----
 
-## 🏛️ Why This Standard Exists
+## When to use
+
+- Creating or reviewing any client-facing app, PWA or frontend that ships to `qa`, staging or mobile dogfooding.
+- Investigating mobile-only bugs (background throttling, lifecycle freezes, BLE or audio drop-outs) that desktop DevTools cannot reproduce.
+
+Do not use for: ADB device control (use `mobile-adb`) or release and deploy configuration (use `cicd-deployment`).
+
+## Requirements
+
+- A browser frontend where `flightRecorder.ts` can be mounted at application start.
+- Optional telemetry endpoint: the app backend or the Oplox ingestion API for the app id. No credentials are embedded; any key comes from configuration.
+- Making the change in a project needs the owner's explicit confirmation before editing code.
+
+## Why this standard exists
 1. **The Mobile DevTools Blind Spot:** Desktop DevTools cannot reproduce Android Knox, iOS WebKit background memory caps, or battery optimization throttling.
 2. **USB Debugging Masking:** USB cable connections keep mobile devices in `battery_charging` state, preventing aggressive OS deep-sleep bugs from triggering.
-3. **Instant Stakeholder Diagnosis:** Allows the Stakeholder or QA testers to test on physical hardware (phones, tablets, BLE machines) and send exact millisecond diagnostic logs to the squad in one tap without tethering or opening remote debuggers.
+3. **Instant owner diagnosis:** Allows the owner or QA testers to test on physical hardware (phones, tablets, BLE machines) and send exact millisecond diagnostic logs to the team in one tap without tethering or opening remote debuggers.
 
----
 
-## 📋 The 5 Architectural Requirements
+## The 5 architectural requirements
 
 ```
 +-----------------------------------------------------------------------------------+
@@ -27,7 +39,7 @@ description: Architecture, specification, and drop-in blueprint for the mandator
 |  survives crashes & reloads  | freeze, visibilitychange   | Downloads, Sync state |
 +------------------------------+----------------------------+-----------------------+
 |  4. Floating Diagnostic UI   | 5. Remote Cloud Telemetry                          |
-|  Unobtrusive pill (🐞 Logs)  | 1-tap send to Oplox (/api/apps/<appId>/telemetry)   |
+|  Unobtrusive pill (Logs)  | 1-tap send to Oplox (/api/apps/<appId>/telemetry)   |
 |  Filter tabs, 1-tap copy     | Zero DevTools needed on physical devices           |
 +-----------------------------------------------------------------------------------+
 ```
@@ -53,13 +65,13 @@ Domain engines must call `recordFlightLog(category, level, message, data)`:
 * **Sync / Auth:** Log token renewals, Firestore sync batches, and connection drops.
 
 ### 4. Floating Diagnostic Drawer UI
-* An unobtrusive floating button placed in the corner: `🐞 Logs (42)`.
+* An unobtrusive floating button placed in the corner: `Logs (42)`.
 * Tapping opens a sleek, dark-mode slide-over / modal drawer:
   * Badge counter showing total entries.
   * Category filter buttons (`ALL`, `AUDIO`, `LIFECYCLE`, `DOWNLOAD`, `ERROR`, etc.).
-  * **"📋 Copy Logs"**: copies all logs formatted as clean text to clipboard (`navigator.clipboard.writeText`).
-  * **"☁️ Send to Cloud"**: POSTs the log buffer to Oplox telemetry or app backend.
-  * **"🗑️ Clear"**: wipes in-memory buffer and `localStorage`.
+  * **"Copy Logs"**: copies all logs formatted as clean text to clipboard (`navigator.clipboard.writeText`).
+  * **"Send to Cloud"**: POSTs the log buffer to Oplox telemetry or app backend.
+  * **"Clear"**: wipes in-memory buffer and `localStorage`.
 
 ### 5. Remote Cloud Telemetry Ingestion
 Dispatches payloads to:
@@ -69,11 +81,10 @@ const endpoints = [
   '/api/telemetry/report'
 ];
 ```
-This enables autonomous squad agents (`root_cause_diagnostician`, `qa_engineer`) to inspect live phone logs remotely via `https://ai-platform-oplox-prod.onrender.com/api/apps/<appId>/logs` without interrupting the Stakeholder.
+This lets the agent or QA tester inspect live phone logs remotely via `https://ai-platform-oplox-prod.onrender.com/api/apps/<appId>/logs` without interrupting the owner. Telemetry payloads must never include secrets, tokens or personal data.
 
----
 
-## 🛠️ Drop-In Implementation Blueprint
+## Drop-in implementation blueprint
 
 ```ts
 export interface FlightLogEntry {
@@ -122,12 +133,28 @@ export function recordFlightLog(
 }
 ```
 
----
 
-## 📋 QA Environment Verification Gate
+## QA environment verification gate
 Before QA sign-off on any release candidate:
 - [ ] Flight recorder is initialized on application mount.
-- [ ] Floating toggle button (`🐞 Logs`) renders and is accessible on mobile screens.
+- [ ] Floating toggle button (`Logs`) renders and is accessible on mobile screens.
 - [ ] Tapping "Copy Logs" copies clean formatted text.
-- [ ] Tapping "Send to Cloud" returns `✓ Sent!` and reaches remote telemetry store.
+- [ ] Tapping "Send to Cloud" returns a success confirmation and reaches remote telemetry store.
 - [ ] Unhandled errors and page visibility state changes appear immediately in the log list.
+
+## Rules
+
+- Mandatory on every `qa`, staging or dogfooding build; never log secrets, tokens or personal data.
+- Do not edit a project to add the recorder without the owner's explicit confirmation.
+- Never `git push` without asking the owner.
+
+## Read next
+
+| File | Read it when |
+| -- | -- |
+| `cicd-deployment` skill | Defining the `qa` environment that requires this recorder |
+| `mobile-adb` skill | Reproducing the issue on a USB-connected Android device |
+
+## Changelog
+
+- 1.0.0 (2026-10-25): tool-neutral rewrite. Added Use-when triggers, version and standard sections; removed emoji; replaced squad-agent names and the old stakeholder term with the owner.

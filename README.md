@@ -26,13 +26,13 @@ Antigravity loads global custom skills from `~/.gemini/config/skills/`.
 
 ### Automated Sync Scripts
 
-#### 1. Push repo changes to Antigravity (`push-to-antigravity.ps1`):
+#### 1. Push repo changes to Antigravity (`sync-to-local.ps1`):
 ```powershell
 .\sync-to-local.ps1
 ```
 Copies all skills from this repository to `C:\Users\<User>\.gemini\config\skills\`.
 
-#### 2. Pull runtime changes back to Git (`pull-from-antigravity.ps1`):
+#### 2. Pull runtime changes back to Git (`sync-from-local.ps1`):
 ```powershell
 .\sync-from-local.ps1
 ```
@@ -42,7 +42,7 @@ Pulls any new skills generated in the local agent configuration into this reposi
 
 ## 🏛️ Contributing a New Skill
 
-1. Create a subfolder: `skills/<skill-name>/`
+1. Create a subfolder: `<skill-name>/` at the repo root
 2. Create `SKILL.md` with required frontmatter:
    ```yaml
    ---

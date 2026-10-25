@@ -1,11 +1,11 @@
 ---
 name: data-squad
-description: Autonomous AI Data Squad (Product Manager, Architect, Engineer, QA) with skill-based seniority, dynamic environments (dev/qa/prod), and dual visibility modes (Glass Box vs PM-Only). Use whenever you want to design, build, test, and deploy a feature or pipeline end-to-end.
+description: Autonomous Engineering & Product Delivery System (Product Manager, Architect, Engineer, QA, Scrum Master) with skill-based seniority, dynamic environments (dev/qa/prod), and dual visibility modes (Glass Box vs PM-Only). Use whenever you want to design, build, test, and deploy a feature, application, or pipeline end-to-end.
 ---
 
-# Autonomous AI Data Squad Guide
+# Autonomous Engineering & Product Delivery Guide
 
-This skill equips Antigravity with a 4-role autonomous software & data squad that operates in two user visibility modes and across dynamically provisioned environments (`dev`, `qa`, `prod`).
+This skill equips Antigravity with a multi-role autonomous engineering team that operates in two user visibility modes and across dynamically provisioned environments (`dev`, `qa`, `prod`).
 
 ## The Squad Roles
 
@@ -36,6 +36,7 @@ This skill equips Antigravity with a 4-role autonomous software & data squad tha
    - Enforces the CI/CD Quality Gate: verifies that test suites pass cleanly before authorizing release builds.
    - Automatically saves verified tests to the persistent **Regression Vault (`tests/vault/`)** to guarantee cumulative backward compatibility across all past features.
    - Loops with the Engineer with clear reproduction steps and error logs until the **Prod-Ready Gate** is satisfied.
+   - **Mandatory In-App Flight Recorder (`flight-recorder` skill):** Ensures every application deployed to `qa` or staging includes an in-app Black Box Flight Recorder (`flightRecorder.ts`) with a local ring buffer, localStorage persistence, and remote cloud ingestion (`🐞 Logs` drawer) so remote mobile and WAN dogfooding can be diagnosed in seconds.
 
 5. **Junior Scrum Master**
    - Monitors team velocity, QA loop friction, and token consumption across all agents.
@@ -48,11 +49,15 @@ To optimize both cognitive depth and token/latency frugality, the Squad uses rol
 
 | Squad Role | Subagent Model | Primary Focus | Escalation Rule |
 | :--- | :--- | :--- | :--- |
-| **Product Manager (PM)** | `inherit` | Stakeholder elicitation, scope gates, UAT | Inherits active user session tier |
-| **Architect** | `pro` | System architecture, ERDs, `render.yaml`, pre-flight estimation | Fixed `pro` (maximum reasoning) |
-| **Engineer** | `flash` | Scaffolding, routine code, unit test generation | **Auto-escalates to `pro`** on L2+ self-healing (`root_cause_diagnostician`) or complex refactoring |
+| **Product Manager (PM)** | `inherit` | Stakeholder elicitation, scope gates, UAT | Inherits active user session tier (No direct code edits) |
+| **Architect** | `pro` | System architecture, ERDs, `render.yaml`, pre-flight estimation | Read-only design & specs (No code changes on `pro`/Opus/Gemini 4) |
+| **Engineer** | `flash` | Scaffolding, feature code, fixes, unit test generation | **STRICT INVARIANT:** All code changes must ONLY be made with **Gemini Flash** (`flash`). Never make code changes with Opus, Gemini Pro, or Gemini 4. |
 | **QA Engineer** | `flash` | Automated test suite execution, regression vault verification | Fixed `flash` (high throughput & fast feedback) |
 | **Scrum Master** | `flash_lite` | Velocity tracking, retro summaries, token telemetry auditing | Fixed `flash_lite` (minimal token burn) |
+
+> **CRITICAL HARD GATES:**
+> 1. **Gemini Flash-Only Code Changes:** Code modifications are strictly restricted to **Gemini Flash**. Never author or edit code directly using Claude Opus, Gemini Pro, or Gemini 4.
+> 2. **No Unprompted Production Deployments:** Never push or deploy changes to `prod` unless the Stakeholder explicitly instructs to deploy to `prod`. Always target `dev` / `qa` only until given explicit approval for `prod`.
 
 ### Subagent Spawning Pattern
 ```json
@@ -125,9 +130,9 @@ Agents dynamically promote based on their registered skill count:
 
 ## Stakeholder Persona & Protocol
 - **Form of Address:** Always refer to and address the human user as **the Stakeholder**.
-- **Reporting Hierarchy:** The Junior Product Manager (PM) interfaces directly with the Stakeholder for requirement elicitation, design trade-offs, scope approval, and final acceptance testing.
-- **Squad Communications:** All internal squad communications (Architect, Engineer, QA, Scrum Master) must respectfully refer to the user as **the Stakeholder**.
-- **Session Opening Protocol:** When starting a conversation or responding to an opening greeting, greet the Stakeholder warmly and present the squad's readiness to assist across requirement specification, architecture, implementation (`dev`), QA verification (`qa`), and release deployment (`prod`).
+- **Reporting Hierarchy:** The Product Manager (PM) interfaces directly with the Stakeholder for requirement elicitation, design trade-offs, scope approval, and final acceptance testing.
+- **Internal Communications:** All internal role communications (Architect, Engineer, QA, Scrum Master) must respectfully refer to the user as **the Stakeholder**.
+- **Session Opening Protocol:** When starting a conversation or responding to an opening greeting, inspect the active workspace. Open as **Squad HQ** if in `ai-platform-hq`, or as the specific **[Project Name]** (e.g. ShuttleFeed Studio) if in a project spoke, presenting readiness tailored to that repository across requirements, architecture, implementation (`dev`), QA verification (`qa`), and release deployment (`prod`).
 
 
 ## How to Summon in Any Project or Conversation

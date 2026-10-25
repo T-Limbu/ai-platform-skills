@@ -1,6 +1,7 @@
 ---
 name: git-ops
-description: Comprehensive Git operations, multi-branch synchronization, GitHub automation, repository health, and version control workflows. Includes field-tested procedures and hardened rules from learnings.
+description: Use when committing, branching, merging, rebasing, syncing branches such as main and gh-pages, recovering lost commits or stashes, or running GitHub CLI tasks (pull requests, Actions, secrets). Holds field-tested git and gh procedures and the safety rules for pushes and force-pushes.
+version: 0.1.0
 ---
 
 # Git-Ops & Version Control Skill

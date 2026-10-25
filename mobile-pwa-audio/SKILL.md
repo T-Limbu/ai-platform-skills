@@ -1,6 +1,7 @@
 ---
 name: mobile-pwa-audio
-description: Architecture, diagnostic standards, and runtime invariants for building bulletproof mobile background audio players in PWAs (Chromium Android & WebKit iOS). Covers in-app flight recorders, ISO BMFF in-memory demuxing, Chromium background pause avoidance, and OS MediaSession lifecycle management.
+description: Use when building or debugging background audio in a mobile PWA on Android Chromium or iOS WebKit, including playback that pauses on screen lock, MediaSession lock-screen controls, or audio files that carry an embedded video track. Holds the runtime invariants, an ISO BMFF video-track detector and an in-memory demuxer.
+version: 0.1.0
 ---
 
 # 🎵 Mobile Background Audio & PWA Media Playbook

@@ -1,6 +1,7 @@
 ---
 name: download-trending
-description: Autonomous workflow to download and update trending songs (Official UK Singles Top 100) into the Off-Grid Audio local library. Automatically verifies/starts local backend and frontend servers, drives the PWA to queue and download tracks to IndexedDB, monitors background downloads, and reports a library audit summary. Trigger whenever the user says "download", "download trending", "update trending", "sync trending", or "fetch trending".
+description: Use when asked to download, update, sync or fetch trending songs (the Official UK Singles Top 100) into the Off-Grid Audio library, in the ai-app-off-grid-audio repo only. Starts the local backend and frontend if needed, runs the headless sync script and reports a library audit. Not for other downloads.
+version: 0.1.0
 ---
 
 # 🎵 Autonomous Trending Songs Sync Skill
@@ -8,7 +9,6 @@ description: Autonomous workflow to download and update trending songs (Official
 This skill automates the complete end-to-end process of updating and caching the **Official UK Singles Chart Top 100** into local IndexedDB storage for offline playback.
 
 Whenever the user prompts:
-- *"download"*
 - *"download trending"*
 - *"update trending songs"*
 - *"sync trending"*

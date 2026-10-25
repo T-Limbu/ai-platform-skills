@@ -52,3 +52,15 @@ Pulls any new skills generated in the local agent configuration into this reposi
    ```
 3. Add supporting scripts or references in `scripts/` or `resources/`.
 4. Run `git status`, commit, and push.
+
+---
+
+## Linting skills
+
+```bash
+python scripts/lint_skills.py                 # PASS/WARN/FAIL per skill, file:line reasons
+python scripts/lint_skills.py --format github # CI annotations
+python -m unittest discover -s tests          # linter self-tests
+```
+
+Checks L1-L18 follow the tool-neutral SKILL.md standard. Exit code is 1 when any skill has a FAIL.

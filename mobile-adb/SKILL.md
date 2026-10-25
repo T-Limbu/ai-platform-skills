@@ -1,15 +1,29 @@
 ---
 name: mobile-adb
-description: Mobile device diagnostics, Android Debug Bridge (ADB) automation, APK reverse engineering, and Web Bluetooth/device troubleshooting. Includes field-tested procedures and hardened rules from learnings.
+description: Use when working with a connected Android device over ADB, capturing screenshots or logs, cold-launching pages in mobile Chrome, granting Web Bluetooth permissions, inspecting webviews, or decompiling an APK. Holds field-tested ADB runbooks and rules.
+version: 1.0.0
 ---
 
 # Mobile Diagnostics & ADB Skill
 
 This skill provides standardized procedures, automation commands, and rules for interacting with connected mobile devices (Android/Samsung), diagnosing apps, and reverse engineering device protocols.
 
----
 
-## 🛠️ Tool Group: Mobile & Device Engineering
+## When to use
+
+- Controlling or diagnosing a USB-connected Android phone or tablet (logs, intents, packages, permissions).
+- Testing Web Bluetooth or mobile web pages in Chrome on a real device.
+- Decompiling an APK to inspect a device protocol.
+
+Do not use for: building the in-app diagnostic recorder (use `flight-recorder`).
+
+## Requirements
+
+- Tools: `adb` (Android platform-tools); optional `jadx`, `apktool`. Device with USB debugging enabled and authorised.
+- Snippets are shown for PowerShell; the `adb` commands are identical in bash.
+- Ask the user before any command that changes device state beyond what the task needs.
+
+## Tools
 
 | Tool | Purpose | Key Commands |
 | :--- | :--- | :--- |
@@ -19,9 +33,8 @@ This skill provides standardized procedures, automation commands, and rules for 
 | **Package Manager (`pm`)** | Inspect and grant runtime permissions | `adb shell pm grant <pkg> <perm>`, `adb shell pm path <pkg>` |
 | **Activity Manager (`am`)** | Launch intents, broadcast receivers, and cold-starts | `adb shell am start -a android.intent.action.VIEW -d <url>` |
 
----
 
-## 📋 Common Operational Runbooks
+## Runbooks
 
 ### 1. Reliable Screen Capture (Windows PowerShell Safe)
 **Problem**: Redirecting `adb exec-out screencap -p > file.png` in PowerShell encodes binary data as UTF-16LE, corrupting the image.
@@ -51,12 +64,21 @@ adb shell pm grant com.android.chrome android.permission.BLUETOOTH_SCAN
 adb shell pm grant com.android.chrome android.permission.BLUETOOTH_CONNECT
 ```
 
----
 
-## 📚 Rules from Learning (Field-Hardened Guidelines)
+## Rules (field-hardened)
 
 1. **Rule [Binary Screencap Redirection]**: NEVER use `>` or `Set-Content` in PowerShell to capture `adb exec-out screencap`. Always write to `/sdcard/` on the device and use `adb pull` to ensure clean binary PNGs.
 2. **Rule [Samsung Internet vs Chrome]**: Samsung Galaxy devices route external web links to Samsung Internet by default, which blocks Web Bluetooth. Any Web Bluetooth app on Android MUST be directed to Google Chrome.
-3. **Rule [Device Lock Detection]**: Check `adb shell dumpsys trust` for `deviceLocked=1`. If locked by biometric/PIN, `wm dismiss-keyguard` cannot bypass security; prompt the user to unlock with their fingerprint/PIN.
+3. **Rule [Device Lock Detection]**: Check `adb shell dumpsys trust` for `deviceLocked=1`. If locked by biometric/PIN, `wm dismiss-keyguard` cannot bypass security; ask the user to unlock with their fingerprint/PIN.
 4. **Rule [Single-File Self-Contained Mobile PWAs]**: Mobile browsers on sport courts or weak cellular networks can fail or hang when loading multi-file ES module imports. Always bundle core protocol drivers and UI into a single self-contained file with an offline-first service worker or local persistence.
-5. **Rule [Continuous Rule Update]**: Every time an adb command fails or a mobile OS quirk is unblocked, document it immediately as a new rule in this file.
+5. **Rule [Continuous Rule Update]**: Every time an adb command fails or a mobile OS quirk is unblocked, propose it to the owner as a new rule in this file (and bump the version).
+
+## Read next
+
+| File | Read it when |
+| -- | -- |
+| `flight-recorder` skill | The app under test needs an in-app log recorder for physical devices |
+
+## Changelog
+
+- 1.0.0 (2026-10-25): tool-neutral rewrite. Added Use-when triggers, version and standard sections; removed emoji from headings.

@@ -17,26 +17,33 @@
 | [`git-ops`](./git-ops/SKILL.md) | Multi-branch Git hygiene, pull request gatekeeping, squash-merge workflows, and remote sync procedures. | Version Control, GitOps |
 | [`mobile-adb`](./mobile-adb/SKILL.md) | Mobile diagnostics, Android Debug Bridge (ADB), APK reverse engineering, and Web Bluetooth/device troubleshooting. | Mobile, Hardware, Bluetooth |
 | [`ui-ux-design`](./ui-ux-design/SKILL.md) | Modern UI/UX guidelines: 4-point spacing grid, dark-mode surface elevation, typography scale, micro-interactions, and battery preservation. | Design Standards, Ergonomics |
+| [`flight-recorder`](./flight-recorder/SKILL.md) | Mandatory in-app Black Box Flight Recorder for `qa` and mobile dogfooding builds. | QA, Mobile Diagnostics |
+| [`mobile-pwa-audio`](./mobile-pwa-audio/SKILL.md) | Background audio invariants for mobile PWAs, including the in-memory video-track demuxer. | Mobile, Audio |
+| [`token-efficiency`](./token-efficiency/SKILL.md) | Practices that cut session token use without lowering quality, and when to offer a fresh session. | Agent Workflow |
+| [`vue-daisyui-standard`](./vue-daisyui-standard/SKILL.md) | Vue 3 + Tailwind + daisyUI project layout, conventions and mobile invariants. | Frontend Architecture |
 
 ---
 
-## 🔄 Two-Way Synchronization with Antigravity
+## 🔄 Installing skills (this repo is the single source)
 
-Antigravity loads global custom skills from `~/.gemini/config/skills/`.
+Edit skills here only. Agent runtimes read them from this folder; nothing is copied back.
 
-### Automated Sync Scripts
+### Claude Code: directory junctions
 
-#### 1. Push repo changes to Antigravity (`sync-to-local.ps1`):
+Link each skill folder instead of copying it, so edits here apply immediately:
+
 ```powershell
-.\sync-to-local.ps1
-```
-Copies all skills from this repository to `C:\Users\<User>\.gemini\config\skills\`.
+# User level (every repo)
+New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\git-ops" -Target "$PWD\git-ops"
 
-#### 2. Pull runtime changes back to Git (`sync-from-local.ps1`):
-```powershell
-.\sync-from-local.ps1
+# Project level (one repo): link into <repo>\.claude\skills\ and keep the links out of git
 ```
-Pulls any new skills generated in the local agent configuration into this repository for git tracking.
+
+User level: `cicd-deployment`, `data-squad`, `flight-recorder`, `git-ops`, `mobile-adb`, `token-efficiency`. Project level: the UI skills in Vue repos, `mobile-pwa-audio` in the audio PWAs, `download-trending` in `ai-app-off-grid-audio` only. A running session reads skills at startup, so check new links in a fresh session.
+
+### Antigravity: one-way copy
+
+Antigravity loads skills from `~/.gemini/config/skills/`. Run `.\sync-to-local.ps1` to copy this repo there. Do not copy that folder back into the repo: it holds older, non-tool-neutral versions (the former `sync-from-local.ps1` was removed for that reason).
 
 ---
 
@@ -47,11 +54,12 @@ Pulls any new skills generated in the local agent configuration into this reposi
    ```yaml
    ---
    name: my-new-skill
-   description: One-line concise description of what the skill does and when to invoke it.
+   description: Use when <situation>. One or two sentences on what the skill holds.
+   version: 0.1.0
    ---
    ```
-3. Add supporting scripts or references in `scripts/` or `resources/`.
-4. Run `git status`, commit, and push.
+3. Add supporting files in `references/` or `scripts/` and link them from `SKILL.md`.
+4. Run the linter (below), then commit. Push only when the owner asks.
 
 ---
 

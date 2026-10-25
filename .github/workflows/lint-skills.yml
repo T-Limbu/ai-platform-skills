@@ -1,0 +1,39 @@
+name: Lint skills
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lint-skills-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Skill linter and self-tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run linter self-tests
+        run: python -m unittest discover -s tests
+
+      - name: Lint skills
+        run: python scripts/lint_skills.py --format github
+
+      - name: Check version bumps against the PR base
+        if: github.event_name == 'pull_request'
+        run: python scripts/lint_skills.py --format github --base "origin/${{ github.base_ref }}"

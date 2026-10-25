@@ -1,153 +1,68 @@
 ---
 name: data-squad
-description: Autonomous AI Data Squad (Product Manager, Architect, Engineer, QA) with skill-based seniority, dynamic environments (dev/qa/prod), and dual visibility modes (Glass Box vs PM-Only). Use whenever you want to design, build, test, and deploy a feature or pipeline end-to-end.
+description: Use when the owner names data-squad or asks to run the squad on a feature, app or pipeline. A role-based delivery checklist (requirements, design, build, QA, retro) that scales ceremony to task size, keeps the regression vault green and stops for owner confirmation before code changes, pushes and deploys. Opt-in only.
+version: 1.0.0
 ---
 
-# Autonomous AI Data Squad Guide
+# Data Squad Delivery Checklist
 
-This skill equips Antigravity with a 4-role autonomous software & data squad that operates in two user visibility modes and across dynamically provisioned environments (`dev`, `qa`, `prod`).
+A delivery workflow organised by role. The roles are steps and viewpoints, not separate agents by default. Use a separate agent only where independence or parallelism pays off (see Rules).
 
-## The Squad Roles
+## When to use
 
-1. **Junior Product Manager (PM)**
-   - Non-technical requirement elicitation.
-   - Clarifies edge cases and business goals.
-   - Writes Given-When-Then acceptance criteria.
-   - Conducts black-box User Acceptance Testing (UAT) against `prod` before final delivery.
+- The owner says "run the squad", "data-squad" or asks for end-to-end delivery of a feature, app or pipeline.
 
-2. **Junior Architect**
-   - Conducts **Pre-Flight Estimation** (complexity score, predicted token burn, recommended model tier).
-   - Deconstructs PM requirements into functional and non-functional specifications.
-   - Auto-generates Mermaid architecture and pipeline diagrams.
-   - Evaluates project scope and dynamically decides the **Environment Topology (`EnvSpec`)**.
-   - **CI/CD & Deployment Architect (`cicd-deployment` skill)**: Provisions `render.yaml` (dev continuous autoDeploy vs main locked down) and `.github/workflows/` (quality gates & pinned release deployment) from Day 1.
+Do not use for: one-line fixes, questions or config tweaks (just do them), release and deploy configuration (use `cicd-deployment`), or git hygiene (use `git-ops`).
 
-3. **Junior Engineer**
-   - Creates **Snapshot Checkpoints** before editing code in `dev` for instant rollback safety.
-   - Scaffolds initial project structure in `dev`.
-   - **`automated_test_generator`**: Automatically synthesizes unit test suites (`unittest`/`vitest`) for all newly authored code, guaranteeing zero untested code ships.
-   - Writes and edits feature code, running local unit checks in `dev`.
-   - Promotes tested builds to `qa`, and releases to `prod` via semantic release tags (`v*`) and pinned Render deployment automation once approved by QA.
-   - Equipped with **Self-Healing Skills** (`root_cause_diagnostician`, `remediation_patcher`) with dynamic L2 → L4 escalation and circuit breaker safety.
+## Requirements
 
-4. **Junior QA Engineer**
-   - Runs automated validations against `qa` targets, verifying both application runtime and unit test suites.
-   - Enforces the **Pragmatic Quality Gate** (approves working code with LGTM; suppresses cosmetic P2/P3 nitpicks).
-   - Enforces the CI/CD Quality Gate: verifies that test suites pass cleanly before authorizing release builds.
-   - Automatically saves verified tests to the persistent **Regression Vault (`tests/vault/`)** to guarantee cumulative backward compatibility across all past features.
-   - Loops with the Engineer with clear reproduction steps and error logs until the **Prod-Ready Gate** is satisfied.
+- The target repo's own workspace (one repo per session).
+- The project test runner (`vitest`, `pytest` or similar) and a `tests/vault/` regression folder.
+- A ticket in the tracker for non-trivial work.
 
-5. **Junior Scrum Master**
-   - Monitors team velocity, QA loop friction, and token consumption across all agents.
-   - Facilitates the **Sprint Retrospective (Retro)** and compiles the mandatory **Post-Deployment Model & Token Telemetry Scorecard** after every delivery.
-   - Tracks model allocation efficiency (`flash` vs `pro`) and surfaces candidate skills and process improvements for human selection without auto-implementing.
+## Workflow
 
-## 🧠 Heterogeneous Multi-Model Dispatch Matrix
+Scale each step to the size of the task. A small feature may need only steps 1, 3 and 4.
 
-To optimize both cognitive depth and token/latency frugality, the Squad uses role-differentiated model dispatch via Antigravity's native `Model` subagent parameter:
+1. **Product Manager: requirements**
+   - Restate the goal in plain language and ask only the questions whose answers change the build.
+   - Write acceptance criteria as Given-When-Then. These are what QA verifies in step 4.
+2. **Architect: design (non-trivial work only)**
+   - Read the code that will change before designing.
+   - Write a short plan: files to touch, data flow, risks, and the test approach. Add a diagram only when it explains more than text.
+   - For a new repo, prepare the environment and CI files from `cicd-deployment`.
+   - Wait for the owner's confirmation before any code change.
+3. **Engineer: build**
+   - Commit or stash a clean checkpoint before editing.
+   - Write the code and the unit tests for it together. No new code ships untested.
+   - Run the narrowest tests while iterating, then the full suite once.
+4. **QA: verify**
+   - Check every acceptance criterion, in the real app for UI changes, not just in tests.
+   - Prefer a reviewer with fresh context (one that did not write the code) for anything non-trivial.
+   - Pragmatic quality gate: block on correctness, security and regressions; list cosmetic nits without blocking.
+   - Add the tests that prove the feature to `tests/vault/` so it stays protected.
+   - Builds for `qa` or staging include the in-app recorder (`flight-recorder`).
+   - On a failure, give reproduction steps and logs, diagnose the root cause, and propose the fix; apply it after confirmation.
+5. **Scrum Master: retro**
+   - In a few lines: what shipped, what took longest, and any lesson worth keeping.
+   - Propose a lesson as a rule change to the relevant skill only if it recurred or was costly. Never edit a skill without the owner's yes.
 
-| Squad Role | Subagent Model | Primary Focus | Escalation Rule |
-| :--- | :--- | :--- | :--- |
-| **Product Manager (PM)** | `inherit` | Stakeholder elicitation, scope gates, UAT | Inherits active user session tier |
-| **Architect** | `pro` | System architecture, ERDs, `render.yaml`, pre-flight estimation | Fixed `pro` (maximum reasoning) |
-| **Engineer** | `flash` | Scaffolding, routine code, unit test generation | **Auto-escalates to `pro`** on L2+ self-healing (`root_cause_diagnostician`) or complex refactoring |
-| **QA Engineer** | `flash` | Automated test suite execution, regression vault verification | Fixed `flash` (high throughput & fast feedback) |
-| **Scrum Master** | `flash_lite` | Velocity tracking, retro summaries, token telemetry auditing | Fixed `flash_lite` (minimal token burn) |
+## Rules
 
-### Subagent Spawning Pattern
-```json
-{
-  "Subagents": [
-    {
-      "Role": "Junior Architect",
-      "TypeName": "architect",
-      "Model": "pro",
-      "Prompt": "Deconstruct PM requirements into EnvSpec and CI/CD topology."
-    },
-    {
-      "Role": "Junior Engineer",
-      "TypeName": "engineer",
-      "Model": "flash",
-      "Prompt": "Author feature code in dev and run automated_test_generator."
-    },
-    {
-      "Role": "Junior QA Engineer",
-      "TypeName": "qa",
-      "Model": "flash",
-      "Prompt": "Validate runtime and verify regression vault."
-    },
-    {
-      "Role": "Junior Scrum Master",
-      "TypeName": "scrum_master",
-      "Model": "flash_lite",
-      "Prompt": "Compile sprint retro and token telemetry scorecard."
-    }
-  ]
-}
-```
+- Address the user as the owner. Observations and questions are discussion, not instructions.
+- No code change, `git push`, tag push or deploy without the owner's explicit confirmation. Never deploy to `prod` unless the owner asks.
+- Keep `tests/vault/` green. Never silence an error to pass a gate.
+- Use separate agents only for: a fresh-context review, independent tasks that can run in parallel, and wide read-only searches. Otherwise one agent carries the work and its context.
+- Never report a check as passed when it was not run.
 
-### Self-Healing Model Escalation Protocol
-1. **Tier 1 (Normal Operations):** The Engineer creates code and runs unit tests on `flash`.
-2. **Tier 2 (Defect Escalation):** If QA fails a build or an uncaught regression occurs (L2+), the self-healing cycle dynamically engages `root_cause_diagnostician` using `Model: "pro"`.
-3. **Remediation & Return:** Once the root cause is isolated and patched by `remediation_patcher`, execution hands back to QA on `flash`.
+## Read next
 
-## 📊 Post-Deployment Model & Token Telemetry Scorecard
+| File | Read it when |
+| -- | -- |
+| `cicd-deployment` skill | Setting up environments, CI or a release |
+| `flight-recorder` skill | Preparing a build for `qa` or mobile testing |
+| `token-efficiency` skill | The task is long or the session is getting expensive |
 
-After every deployment/delivery to `prod`, the Junior Scrum Master must generate and include a Model & Token Telemetry Scorecard in the final Sprint Retrospective and delivery summary artifact.
+## Changelog
 
-### Audit Tool Execution
-Telemetry can be audited on demand or during retrospectives via the Squad HQ telemetry tool:
-```powershell
-python tools/squad_telemetry.py --conv-id <conversation-id>
-```
-
-### Standard Telemetry Output Format
-| Agent Role | Model Tier | Steps | Tool Calls | Input Tokens | Cache Tokens | Output Tokens | Total Tokens |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Product Manager (PM)** | `inherit` | 40 | 18 | 116,801 | 491,781 | 12,160 | **620,742** |
-| **Junior Architect** | `pro` | 14 | 8 | 42,100 | 180,450 | 4,210 | **226,760** |
-| **Junior Engineer** | `flash` | 22 | 15 | 35,400 | 120,300 | 6,800 | **162,500** |
-| **Junior QA Engineer** | `flash` | 10 | 6 | 18,200 | 65,000 | 2,100 | **85,300** |
-| **Junior Scrum Master** | `flash_lite` | 4 | 2 | 5,100 | 20,000 | 800 | **25,900** |
-| **Grand Total** | — | — | — | **217,601** | **877,531** | **26,070** | **1,121,202** |
-
-## Seniority & Skill Inheritance Model
-
-Agents dynamically promote based on their registered skill count:
-- **Junior (<= 4 skills)**: Fast model (Gemini Flash), minimal scoped context, tiny token budget (~4k tokens).
-- **Mid (5-8 skills)**: Standard model, feature-level context (~16k tokens).
-- **Senior (9+ skills)**: Deep-reasoning model (Gemini Pro), full-repository context, architectural review.
-
-## The Two Interaction Modes
-
-- **Glass Box Mode (`--mode glass-box`)**: Full transparency. The Stakeholder sees every agent's thoughts, diagrams, dev builds, and QA scorecards in real-time.
-- **PM-Only Mode (`--mode pm-only`)**: Executive hands-off mode. The Stakeholder only speaks with the Product Manager; the Architect, Engineer, and QA work in the background.
-
-## Stakeholder Persona & Protocol
-- **Form of Address:** Always refer to and address the human user as **the Stakeholder**.
-- **Reporting Hierarchy:** The Junior Product Manager (PM) interfaces directly with the Stakeholder for requirement elicitation, design trade-offs, scope approval, and final acceptance testing.
-- **Squad Communications:** All internal squad communications (Architect, Engineer, QA, Scrum Master) must respectfully refer to the user as **the Stakeholder**.
-- **Session Opening Protocol:** When starting a conversation or responding to an opening greeting, greet the Stakeholder warmly and present the squad's readiness to assist across requirement specification, architecture, implementation (`dev`), QA verification (`qa`), and release deployment (`prod`).
-
-
-## How to Summon in Any Project or Conversation
-
-### From the Terminal (Any Project Directory):
-```powershell
-# Glass Box mode (full visibility)
-squad run "<business requirement or feature>" --mode glass-box
-
-# Executive mode (PM only)
-squad run "<business requirement or feature>" --mode pm-only
-
-# View and approve proposed skill evolutions:
-squad skills list
-squad skills approve PROP-01
-squad skills reject PROP-02
-```
-
-### From Any Antigravity Chat Conversation:
-Simply tell the assistant in any workspace:
-> *"Run the data squad in [glass-box / pm-only] mode to build: <your requirement>"*
-
-The assistant will activate this skill, execute the orchestrator across `dev`, `qa`, and `prod`, and deliver the verified output to you.
+- 1.0.0 (2026-10-25): tool-neutral rewrite. Replaced the model dispatch matrix, model-only code-change gate, seniority tiers, CLI and telemetry scorecard with a role-based checklist; roles are steps, with separate agents only for review, parallel work and wide search; added owner confirmation rules and Given-When-Then criteria feeding QA.

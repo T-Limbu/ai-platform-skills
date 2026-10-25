@@ -1,25 +1,49 @@
 ---
 name: cicd-deployment
-description: Standard release, CI/CD, and deployment blueprint across all projects. Enforces dual environments (dev continuous auto-deploy vs main locked down), tagged release packaging (SemVer v*), automated test gates, GitHub release artifacts, Render API pinned deploy, and summary reporting.
+description: Use when setting up or changing CI/CD, release workflows, render.yaml, SemVer tags or deployments, or when a deploy fails. Defines the 3-tier model (local dev, cloud qa from main by manual dispatch, gated prod with autoDeploy false and explicit owner sign-off), test gates and pinned Render deploys.
+version: 1.0.0
 ---
 
-# 🚀 CI/CD & Production Deployment Standard
+# CI/CD and Production Deployment Standard
 
-This skill defines the organization-wide CI/CD, version packaging, and deployment standard. **Every repository in the workspace and Data Squad pipeline must adhere to this architecture from Day 1.**
+This skill defines the organization-wide CI/CD, version packaging, and deployment standard. **Every repository in the workspace (`ai-app-*` and `ai-platform-*`) must adhere to this architecture from Day 1.**
 
----
+## When to use
 
-## 🏛️ The 4 Core Architectural Pillars
+- Scaffolding a repository or onboarding one to the release standard.
+- Editing `render.yaml`, `.github/workflows/`, version tags or release packaging.
+- Promoting a build to `qa` or `prod`, or diagnosing a failed deploy or health check.
 
-### 1. Dual Environments on Day 1 (`render.yaml`)
-Never wait until MVP completion to configure deployment. Every project maintains two distinct environments:
+Do not use for: general git branching and PR hygiene (use `git-ops`).
 
-| Environment | Branch | Auto-Deploy | Purpose |
-| :--- | :--- | :--- | :--- |
-| **Development (`dev`)** | `dev` | **`true`** | Rapid dogfooding, automated smoke testing, and QA validation. |
-| **Production (`prod`)** | `main` | **`false`** | Strict zero-downtime production. **Never auto-deploys directly on push.** |
+## Requirements
 
-> 📁 Drop-in template: [`references/render-blueprint-template.yaml`](./references/render-blueprint-template.yaml)
+- Tools: `git`, `gh`, `curl`, and the project test runner (`npm`, `pytest`).
+- Environment variables and CI secrets (names only): `RENDER_API_KEY`, `RENDER_SERVICE_ID`. Values come from the secret store or GitHub Actions secrets; never write them into files.
+
+## Owner rules (apply to every step)
+
+- Make no code change without the owner's explicit confirmation.
+- Never run `git push` (including tag pushes) without asking the owner first.
+- Never put secrets in files, workflows, logs or examples.
+- Never deploy to `prod` unless the owner explicitly asks.
+
+## The 4 core pillars
+
+### 1. The 3-Tier Environment Architecture on Day 1 (`render.yaml`)
+Never wait until MVP completion to configure deployment. Every project adheres to the 3-tier `main`-centric lifecycle:
+
+| Tier | Environment | Target & Branch | Promotion Trigger | Purpose & Configuration |
+| :--- | :--- | :--- | :--- | :--- |
+| **Dev** | `local` | Localhost (`localhost:<port>`) | Instant HMR | Fast workstation iteration, unit testing, local SQLite/IndexedDB, zero latency, zero cloud cost. |
+| **QA** | `qa` (Cloud) | Render `*-qa.onrender.com` (`main` branch) | Controlled / Manual Dispatch | Cloud staging for non-prod end-to-end testing (`ai-platform-sentinel`), mobile dogfooding, WAN latency validation, test keys (`pk_test_*`), and mandatory in-app Black Box Flight Recorder (`flight-recorder` skill). |
+| **Prod** | `prod` (Cloud) | Render `*.onrender.com` (`main` branch) | **`autoDeploy: false`** (explicit owner sign-off only) | Strict zero-downtime production. **NEVER trigger a `prod` deployment unless the owner explicitly asks to deploy to `prod`.** |
+
+> **Mandatory governance gates:**
+> - **Explicit prod sign-off:** Never push or trigger deployments to `prod` unless the owner explicitly requests a production deployment. Default all deliveries and verifications to `dev` / `qa`.
+> - **Owner confirmation:** No code change, `git push` or tag push without the owner's explicit confirmation.
+
+> Drop-in template: [`references/render-blueprint-template.yaml`](./references/render-blueprint-template.yaml)
 
 ---
 
@@ -36,9 +60,9 @@ No code is released or promoted without automated verification:
 Production deployments are deterministic, immutable, and test-gated.
 
 #### Trigger Vectors:
-1. **SemVer Tag Push:** `git tag v1.0.0 && git push origin v1.0.0`
+1. **SemVer tag push (`v*`):** `git tag v1.0.0 && git push origin v1.0.0` (ask the owner before pushing).
 2. **GitHub Release:** Publishing an official release via the GitHub UI.
-3. **Manual Rollback / Dispatch (`workflow_dispatch`):** Run with any previous `commit_sha` for instantaneous rollback.
+3. **Manual rollback / dispatch (`workflow_dispatch`):** Run with any previous `commit_sha` for instantaneous rollback.
 
 #### Release Execution Pipeline:
 1. **Ref Resolution:** Checks out the exact release tag or pinned commit SHA.
@@ -55,7 +79,8 @@ Production deployments are deterministic, immutable, and test-gated.
    ```
 7. **Audit Report:** Emits a rich markdown summary into `$GITHUB_STEP_SUMMARY`.
 
-> 📁 Drop-in template: [`references/release-workflow-template.yml`](./references/release-workflow-template.yml)
+> Centralized Reusable Actions: Available in [`T-Limbu/ai-platform-workflows`](https://github.com/T-Limbu/ai-platform-workflows) (`ci-test.yml` and `render-release.yml`).
+> Drop-in template: [`references/release-workflow-template.yml`](./references/release-workflow-template.yml)
 
 ---
 
@@ -77,16 +102,33 @@ When scaffolding a new repository or onboarding an existing project to this stan
 
 ---
 
-## 👥 Data Squad Role Responsibilities
+### 5. Render Node/SPA invariants and failure diagnosis
 
-- **Junior Architect:**
+Field-tested build and runtime rules (devDependency retention, Node pinning, `0.0.0.0` binding, health probes) and the read-only deploy-failure diagnosis procedure live in [references/render-node-invariants.md](references/render-node-invariants.md). Diagnosing is read-only: propose fixes and ask the owner before patching a service or redeploying.
+
+## Role responsibilities
+
+- **Architect:**
   - Evaluates project hosting needs during the Pre-Flight phase.
-  - Automatically commits `render.yaml` and `.github/workflows/` blueprints before engineering begins.
-- **Junior Engineer:**
-  - Writes code and ensures unit tests pass locally and in CI.
-  - Increments semantic versioning (`vX.Y.Z`) and generates tags upon milestone completion.
-- **Junior QA Engineer:**
-  - Validates test pass rate in CI.
-  - Verifies build artifacts in `dev` before authorising production release promotion.
-- **Junior Product Manager:**
-  - Conducts black-box UAT on `dev` before signing off on the tagged production release.
+  - Prepares `render.yaml` and `.github/workflows/` blueprints (inheriting from `T-Limbu/ai-platform-workflows`) before engineering begins, and commits them once the owner confirms.
+- **Engineer:**
+  - Writes code and ensures unit tests pass locally (`dev`) and in CI.
+  - Proposes semantic version bumps (`vX.Y.Z`) and creates tags at milestones; pushing a tag needs owner confirmation.
+- **QA Engineer:**
+  - Validates test pass rate in CI and runs `ai-platform-sentinel` end-to-end checks against `qa`.
+  - Verifies build artifacts in `qa` before authorizing production release promotion.
+- **Product Manager:**
+  - Conducts black-box UAT on `qa` before the owner signs off on the tagged production release.
+
+## Read next
+
+| File | Read it when |
+| -- | -- |
+| [references/render-node-invariants.md](references/render-node-invariants.md) | A Render build, boot or health check fails, or a Node/SPA service is being configured |
+| [references/render-blueprint-template.yaml](references/render-blueprint-template.yaml) | Creating `render.yaml` for a new project |
+| [references/release-workflow-template.yml](references/release-workflow-template.yml) | Creating `.github/workflows/release.yml` |
+| `flight-recorder` skill | Preparing a build for `qa` (mandatory in-app recorder) |
+
+## Changelog
+
+- 1.0.0 (2026-10-25): tool-neutral rewrite. Description rewritten to the 3-tier model; removed the model-specific code-change rule and the autonomous self-healing loop (now propose-and-confirm); added owner rules; standard sections added.

@@ -1,20 +1,20 @@
 # 📚 UI/UX Master Knowledge Base Index
 
-> Dynamically evolved from top-tier UI/UX engineering masterclasses on YouTube.
+> Dynamically evolved from top-tier UI/UX engineering masterclasses.
 
-**Active Modular Playbooks:** `7` (Dynamically expanding)
+**Active Playbooks:** `12`
 
 | Playbook | Topic Focus | File Path |
 | :--- | :--- | :--- |
-| **Typography & Hierarchy** | Tracking formulas, line-heights, density scales | [`typography.md`](typography.md) |
-| **Layout, Grids & Spacing** | 4-point spacing grid, whitespace, responsive columns | [`layout-and-grids.md`](layout-and-grids.md) |
-| **Color & Dark Mode** | Surface lightness increments, semantic color ramps | [`color-and-darkmode.md`](color-and-darkmode.md) |
-| **Components & Buttons** | 2x button ratios, icon box alignment, ghost buttons | [`components-and-buttons.md`](components-and-buttons.md) |
-| **Interaction States** | The 4 mandatory states (default/hover/active/disabled) | [`interaction-states.md`](interaction-states.md) |
-| **Depth, Shadows & Overlays** | Gradient image readability, progressive backdrop blur | [`depth-and-overlays.md`](depth-and-overlays.md) |
-| **Information Architecture** | Two primary focal actions, cognitive load reduction, tap targets | [`information-architecture.md`](information-architecture.md) |
-
----
-
-### How New Playbooks Are Added
-Whenever a video is processed by `distill_ui_ux.py`, Gemini checks if the content fits an existing playbook or introduces a new topic. New files are created automatically and registered in this index!
+| **Color And Darkmode** | Specialized Playbook | [`references/color-and-darkmode.md`](color-and-darkmode.md) |
+| **Community Distilled Rules** | Specialized Playbook | [`references/community-distilled-rules.md`](community-distilled-rules.md) |
+| **Components And Buttons** | Specialized Playbook | [`references/components-and-buttons.md`](components-and-buttons.md) |
+| **Content Delivery** | Specialized Playbook | [`references/content-delivery.md`](content-delivery.md) |
+| **Depth And Overlays** | Specialized Playbook | [`references/depth-and-overlays.md`](depth-and-overlays.md) |
+| **Getting Started And Practice Methodology** | Specialized Playbook | [`references/getting-started-and-practice-methodology.md`](getting-started-and-practice-methodology.md) |
+| **Information Architecture** | Specialized Playbook | [`references/information-architecture.md`](information-architecture.md) |
+| **Interaction States And Feedback** | Specialized Playbook | [`references/interaction-states-and-feedback.md`](interaction-states-and-feedback.md) |
+| **Interaction States** | Specialized Playbook | [`references/interaction-states.md`](interaction-states.md) |
+| **Layout And Grids** | Specialized Playbook | [`references/layout-and-grids.md`](layout-and-grids.md) |
+| **Typography** | Specialized Playbook | [`references/typography.md`](typography.md) |
+| **Visual Hierarchy And Signifiers** | Specialized Playbook | [`references/visual-hierarchy-and-signifiers.md`](visual-hierarchy-and-signifiers.md) |

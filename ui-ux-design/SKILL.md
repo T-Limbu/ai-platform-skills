@@ -1,6 +1,7 @@
 ---
 name: ui-ux-design
-description: Definitive UI/UX design standards, typography scales, 4-point spacing grids, dark-mode surface elevation, button ergonomics, mandatory state feedback, micro-interactions, and visual hierarchy rules for building tier-1 web and mobile applications.
+description: Use when designing, building or reviewing any web or mobile UI, including spacing, typography, color, dark mode, buttons, interaction states, overlays or battery-frugal background behavior. Holds the 12 UI/UX laws (4-point grid, dark-mode surface elevation, mandatory hover, active and disabled states) and a pre-done checklist.
+version: 0.1.0
 ---
 
 # 🎨 UI/UX Design System & Craft Standard

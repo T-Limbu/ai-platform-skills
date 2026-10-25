@@ -1,6 +1,7 @@
 ---
 name: cicd-devops
-description: Continuous Integration & Continuous Delivery (CI/CD) pipelines, automated testing gates, GitHub Actions automation, build verifications, and deployment workflows. Includes reusable blueprints and hardened rules from learnings.
+description: Use when writing or debugging GitHub Actions workflows, test and lint quality gates, local workflow runs with act, or static site deploys to GitHub Pages. Holds reusable workflow blueprints and field-tested CI rules. For Render releases and the dev, qa and prod model, use cicd-deployment instead.
+version: 0.1.0
 ---
 
 # CI/CD & DevOps Automation Skill

@@ -3,20 +3,34 @@ services:
   # LOCKED DOWN: autoDeploy is explicitly disabled to guarantee unpinned commits never ship to production.
   - type: web
     name: project-name-prod
-    env: static # or 'node', 'docker', 'python'
-    rootDir: frontend # or '.'
-    buildCommand: npm install; npm run build
-    staticPublishPath: dist
+    env: node # or 'static', 'docker', 'python'
+    rootDir: . # or 'frontend'
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: npm run server
     branch: main
     autoDeploy: false
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: APP_ENV
+        value: prod
+      - key: NODE_VERSION
+        value: 20
 
-  # Development Frontend / Web Service (dev branch)
-  # CONTINUOUS: autoDeploy is enabled for rapid dogfooding and QA verification.
+  # QA / Cloud Staging Web Service (dev branch)
+  # CONTINUOUS: autoDeploy is enabled for rapid dogfooding, mobile QA, and non-prod end-to-end verification.
   - type: web
-    name: project-name-dev
-    env: static # or 'node', 'docker', 'python'
-    rootDir: frontend # or '.'
-    buildCommand: npm install; npm run build
-    staticPublishPath: dist
+    name: project-name-qa
+    env: node # or 'static', 'docker', 'python'
+    rootDir: . # or 'frontend'
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: npm run server
     branch: dev
     autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: APP_ENV
+        value: qa
+      - key: NODE_VERSION
+        value: 20

@@ -5,9 +5,9 @@ and dynamically slots knowledge into modular, self-organizing topic playbooks
 (references/<topic>.md) as the knowledge base grows.
 
 Usage:
-  python distill_ui_ux.py --url https://www.youtube.com/watch?v=VIDEO_ID
-  python distill_ui_ux.py --id VIDEO_ID
-  python distill_ui_ux.py --batch videos.txt
+  python tools/distill_ui_ux.py --url https://www.youtube.com/watch?v=VIDEO_ID
+  python tools/distill_ui_ux.py --id VIDEO_ID
+  python tools/distill_ui_ux.py --batch videos.txt
 """
 
 import os
@@ -30,7 +30,7 @@ try:
 except ImportError:
     yt_dlp = None
 
-SKILL_ROOT = Path(__file__).parent.parent
+SKILL_ROOT = Path(__file__).resolve().parent.parent / "ui-ux-design"
 SKILL_MD = SKILL_ROOT / "SKILL.md"
 REFERENCES_DIR = SKILL_ROOT / "references"
 INDEX_MD = REFERENCES_DIR / "INDEX.md"

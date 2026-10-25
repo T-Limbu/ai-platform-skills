@@ -40,7 +40,7 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          python ui-ux-design/scripts/distill_ui_ux.py --url "${{ inputs.video_url_or_id }}"
+          python tools/distill_ui_ux.py --url "${{ inputs.video_url_or_id }}"
 
       - name: Commit Updated Skill Playbooks
         run: |

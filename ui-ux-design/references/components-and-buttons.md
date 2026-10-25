@@ -33,3 +33,54 @@
 ### 3. Anti-Patterns
 * ❌ Square, squat buttons with equal height and width for text actions.
 * ❌ Icons floating unaligned with text line-height.
+
+
+---
+
+## 🎥 Reference: YouTube Video (EcbgbKtOELY) (`EcbgbKtOELY`)
+
+# Button Architecture & Icon Alignment
+
+### Source: YouTube Video (EcbgbKtOELY)
+
+### Concrete Rules & Mathematical Principles
+- **The Line-Height Icon Sizing Rule**: Normalize icon dimensions precisely to the typography's `line-height` value. If body/button text uses a font size of `14px` with a line-height of `24px`, configure icon bounding boxes to exactly `24×24px`. This prevents vertical baseline jitter.
+- **Button Aspect Padding Ratio ($2H = W$ Rule-of-Thumb)**:
+  - Approximate horizontal padding by doubling vertical spatial dimensions (`padding: 10px 20px` or `padding: 12px 24px`), maintaining stable horizontal visual mass.
+- **Ghost Button Mechanics**: Sidebar navigation elements and secondary actions are ghost buttons (background-free buttons that only reveal borders or fills upon hover/focus). Pair primary solid CTAs with ghost buttons for clean visual weighting.
+
+### Anti-Patterns
+- **Oversized Icon Clutter**: Using 32px icons beside 16px text without normalizing bounding boxes, creating top-heavy alignment.
+- **Competing Dual Primaries**: Placing two solid-filled high-contrast buttons directly adjacent to each other.
+
+### Implementation Specs
+```css
+/* Standard Button Token Base */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 20px; /* 2:1 width-to-height distribution ratio */
+  font-size: 14px;
+  line-height: 20px;
+  border-radius: 6px;
+  transition: all 120ms ease-in-out;
+}
+
+.btn-icon {
+  width: 20px;  /* Locked precisely to line-height */
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+.btn-ghost:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+```

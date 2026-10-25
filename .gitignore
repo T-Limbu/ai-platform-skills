@@ -1,0 +1,9 @@
+# Secrets and local env
+.env
+.env.*
+!.env.example
+
+# Caches
+__pycache__/
+*.pyc
+node_modules/

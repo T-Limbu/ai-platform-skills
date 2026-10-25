@@ -1,12 +1,12 @@
 ---
 name: daisyui-design-vault
 description: Use when building or changing UI with daisyUI v5 or v4 or Tailwind CSS, creating a dashboard, landing page, store, auth or docs layout, choosing or switching daisyUI themes, or refining an existing daisyUI layout. Holds the 68-component catalog, blueprints of the official daisyUI store templates, theme tokens and anti-slop rules.
-version: 0.1.0
+version: 0.1.1
 ---
 
 # 🎨 daisyUI Design Vault Skill
 
-The definitive knowledge base, layout synthesis engine, and visual design reference for **daisyUI v5 / v4** within the Antigravity AI Data Squad.
+The definitive knowledge base, layout synthesis engine, and visual design reference for **daisyUI v5 / v4** across squad projects.
 
 Grounds coding agents in real-world, shipped design systems from the **official daisyUI Store** (`daisyui.com/store/`) and provides instant access to all **68 official components**, semantic color rules, and procedural layout generation.
 

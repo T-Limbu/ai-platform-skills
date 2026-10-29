@@ -26,6 +26,7 @@ Tool-neutral rules for every repository under `ai_projects`. Project-specific fa
 - Non-trivial work needs a Linear ticket. Use the Linear connector, not API-key scripts.
 - Team ID: `108687e2-779d-4afa-af70-fd5ed5a2494e`. No local ticket files.
 - Post a completion comment when moving a ticket to Done.
+- Write tickets with the `ticket-writing` skill: self-contained briefs for a model starting cold.
 
 ## 5. Secrets
 - No secrets in files, prompts, logs or commits. Use environment variables; documents list variable names only.
@@ -73,3 +74,10 @@ Prefer plain HTTP or a reader-mode fetch for web docs; use a headless browser on
 
 ## 10. Optional workflows (opt-in, never always-on)
 Requirement elicitation, goal specs, multi-role dispatch and sprint retros exist as skills: `pm-elicitation`, `goal-spec`, `squad-dispatch`, `squad-retro`, `data-squad`. Use them only when the owner names them.
+
+## 11. Project docs
+- Each repo keeps project knowledge in `docs/`, with `docs/INDEX.md` as the entry point: one line per doc (path, what, when to read, last verified).
+- Link `docs/INDEX.md` from the repo's `AGENTS.md`; never auto-include docs.
+- Store only what code and git can't show. Stamp each doc with the commit it was verified at.
+- Update docs in the same pull request as the code they describe.
+- A fact shared by repos lives in the repo that owns it; others link to it. Cross-project knowledge goes in this hub's `knowledge/`.

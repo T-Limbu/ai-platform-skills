@@ -1,0 +1,83 @@
+---
+name: ticket-writing
+description: Use when turning a review, bug report, plan or owner request into Linear tickets that another model or subagent will pick up in a fresh session, or when splitting or refining such tickets. Each ticket is a self-contained brief (context, objective, how to build, test and run end to end, quality bar, stop points, report-back format), so a reader with none of the original conversation can deliver durable work.
+version: 0.1.0
+---
+
+# Ticket Writing
+
+A ticket here is a **brief for a model that starts cold**: a subagent or a new session that has the repo and the Linear connector, but none of the conversation that produced the ticket. If the brief leaves something out, that model will guess. Write so it doesn't have to.
+
+This is the Product Manager and Architect step of `data-squad`, written down so it can be handed off.
+
+## When to use
+
+- The owner asks for tickets, a backlog or a hand-off from a review, plan, bug report or list of findings.
+- Work is about to be delegated to another session or subagent.
+- A ticket is too big, vague or overlapping, and needs splitting or rewriting.
+
+Do not use for: one-line fixes the owner wants done now (just do them), or tracking steps inside the current session.
+
+## Requirements
+
+- The Linear connector, with access to team `KSH` (team ID in `conventions/AGENTS.md`, section 4).
+- Read access to the code, plus the repo's commands for running the app and its tests.
+
+## Workflow
+
+1. **Verify.** Read the `docs/INDEX.md` of every repo the work touches, and the docs it points to that are relevant. Re-read the code behind every finding and cite `file:line` (`~` for approximate). Write any new finding into the owning repo's `docs/` (with the owner's yes, as it's a repo change) so the ticket can link it. Run the commands the brief will tell the reader to run, so they're known to work. Anything unconfirmed is written as "likely", with how to confirm it.
+2. **Check for existing tickets.**
+   - Search the team by key words and file names, and list the project's open tickets. Read any that overlap.
+   - A finding that's already covered becomes a link, not a new ticket.
+   - Look for **gaps between tickets**: a planned change in one repo that silently breaks another app. That gap is a ticket of its own.
+3. **Slice.** Follow the slicing rules below. Draft the titles and priorities first; for more than about 8 tickets, show the list to the owner before writing the bodies.
+4. **Write each brief** with [references/ticket-template.md](references/ticket-template.md). Fill the quality bar from [references/quality-bar.md](references/quality-bar.md): keep only the items that apply, and make each one specific to this ticket.
+5. **Cold-read test.** Before creating, give one draft to a fresh-context reviewer (a subagent with no conversation history) and ask: "What would you need to ask before starting? What would you guess?" Fix the brief until the answer is "nothing". For a batch, test the most complex ticket, then apply the lessons to the rest.
+6. **Create and link.** Set the fields per the conventions below. Create blocking tickets first, so later tickets can name them.
+7. **Report back** with a table of ticket links, project and priority, plus any overlap with existing tickets.
+
+## Slicing rules
+
+- **One ticket = one repo = one branch = one pull request.** Cross-repo work becomes linked tickets, one per repo.
+- **Sized for one session.** A model should be able to read the context, build, test and run it end to end within one session's budget. If the brief needs more than about 10 required changes, split it.
+- **Decisions are separate.** If the work can't start until the owner chooses, write an `[Owner decision]` ticket (labels `Spike`, `Role: Architect`) and block the build ticket on it. A model must never have to make a product or security decision mid-build.
+- **Owner-only actions** (secrets, deploy sign-off, account changes) get an `[Owner]` ticket.
+- **Group small items by theme and file**; keep security and data-loss items on their own.
+
+## Field conventions
+
+| Field | Rule |
+| -- | -- |
+| Team | `KSH` |
+| Project | The project of the repo that changes. |
+| Title | `<App>: <problem or outcome>`, specific and in plain words, under about 100 characters. |
+| Labels | One role (`Role: Engineer` or `Role: Architect`) plus one type (`Bug`, `Feature`, `Improvement`, `Spike`). |
+| Priority | **Urgent**: security exposure, data loss or a hardware safety problem, live now. **High**: wrong behaviour users hit, or a blocker. **Medium**: quality, performance, maintainability. **Low**: housekeeping. |
+| Relations | `blockedBy` for hard order (including the repo's regression-baseline ticket, if any); `relatedTo` for overlap. Duplicates only with the owner's yes. |
+| Status | `Backlog`. |
+
+## Rules
+
+- **Self-contained.** Restate every fact the reader needs. A linked ticket gets a one-line summary of what matters from it, not just its id. Never write "as discussed", "see above" or "the usual way".
+- **Project docs, linked not copied.** Each repo keeps its own knowledge in `docs/`, with `docs/INDEX.md` as the entry point. A ticket lists the docs it depends on under Context docs, as `repo:path` plus the verified commit, and attaches them as GitHub links, so a session without the other repo checked out can still read them. A fact shared by two repos lives in the repo that **owns** it (the provider of an API or contract), and the other repo links to it. Knowledge used across many projects goes in the hub's `knowledge/` folder.
+- **Bounded reading.** The reader opens the listed docs and follows their links **one level** at most. It doesn't crawl other repos' `docs/`. If something is missing, it stops and comments on the ticket, and the ticket gets the missing doc added.
+- **Objective before steps.** State the outcome and why it matters, so the reader can make sound small choices the brief didn't foresee.
+- **Exact commands.** Give the real commands to set up, run the app, run the tests and check end to end, and the expected result of each.
+- **Every brief has** Must not break, Tests to write, an end-to-end check, Given-When-Then acceptance criteria, stop points and a report-back format.
+- **Stop points are explicit.** The reader commits on the ticket's branch but never pushes, merges or deploys without the owner's go-ahead. It stops and comments on the ticket when anything in the brief turns out wrong.
+- Creating tickets publishes them, so create them only when the owner asks. Editing or commenting on existing tickets needs the owner's yes each time.
+- Name files, functions and env var names; never machine paths, token values or secrets.
+- No local ticket files. On Done, post a completion comment saying what shipped and what was verified.
+
+## Read next
+
+| File | Read it when |
+| -- | -- |
+| [references/ticket-template.md](references/ticket-template.md) | Writing a ticket body |
+| [references/quality-bar.md](references/quality-bar.md) | Filling the quality bar section |
+| `data-squad` skill | The tickets feed a squad delivery |
+| `git-ops` skill | Starting work on a ticket |
+
+## Changelog
+
+- 0.1.0 (2026-10-29): first version. Tickets are briefs for a cold-start model; adds the quality bar and the cold-read test. Distilled from the Oplox security backlog (KSH-246 to KSH-257) and the Shuttle Feed review (KSH-285 to KSH-295).

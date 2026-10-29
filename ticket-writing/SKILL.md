@@ -1,7 +1,7 @@
 ---
 name: ticket-writing
 description: Use when turning a review, bug report, plan or owner request into Linear tickets that another model or subagent will pick up in a fresh session, or when splitting or refining such tickets. Each ticket is a self-contained brief (context, objective, how to build, test and run end to end, quality bar, stop points, report-back format), so a reader with none of the original conversation can deliver durable work.
-version: 0.3.2
+version: 0.3.3
 ---
 
 # Ticket Writing
@@ -52,7 +52,7 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
 | -- | -- |
 | Team | `KSH` |
 | Project | The project of the repo that changes. |
-| Title | `<App>: <problem or outcome>`, specific and in plain words, under about 100 characters. |
+| Title | `<App>: <problem or outcome>`, specific and in plain words, under about 100 characters. Renaming a ticket changes its Linear git branch name, so after any title change, update the branch name inside the brief. |
 | Labels | One role (`Role: Engineer` or `Role: Architect`) plus one type (`Bug`, `Feature`, `Improvement`, `Spike`). |
 | Priority | **Urgent**: security exposure, data loss or a hardware safety problem, live now. **High**: wrong behaviour users hit, or a blocker. **Medium**: quality, performance, maintainability. **Low**: housekeeping. |
 | Relations | `blockedBy` for hard order (including the repo's regression-baseline ticket, if any); `relatedTo` for overlap. Duplicates only with the owner's yes. |
@@ -88,6 +88,7 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
 
 ## Changelog
 
+- 0.3.3 (2026-10-29): Title convention: renaming a ticket changes its Linear branch name, so update the branch name in the brief after any title change.
 - 0.3.2 (2026-10-29): new workflow step: pilot one brief through the cold-read test until it passes, then apply its lessons to the rest of the batch. From the Shuttle Feed retro: both pilot drafts (KSH-286, KSH-289) failed their first cold read.
 - 0.3.1 (2026-10-29): the docs convention detail moved to the `project-docs` skill; this skill now points to it.
 - 0.3.0 (2026-10-29): short form for small tickets; "Written against" provenance with a `git log` re-check; Linear status flow; "Prod approval needed" comment; test data source; feedback loop from the reader's brief gaps. Pilot feedback (KSH-286): CI and `qa` deploy checks, inputs touched, shared-code load order, storage re-validation, catching unblocked hosts in tests, repeated cold reads.

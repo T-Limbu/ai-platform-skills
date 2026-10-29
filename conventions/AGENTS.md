@@ -80,4 +80,5 @@ Requirement elicitation, goal specs, multi-role dispatch and sprint retros exist
 - Link `docs/INDEX.md` from the repo's `AGENTS.md`; never auto-include docs.
 - Store only what code and git can't show. Stamp each doc with the commit it was verified at.
 - Update docs in the same pull request as the code they describe.
+- `docs/PROGRESS.md` is the per-repo session log: newest first, at most 10 lines per entry, no transcripts. Update it before any handoff or archive.
 - A fact shared by repos lives in the repo that owns it; others link to it. Cross-project knowledge goes in this hub's `knowledge/`.

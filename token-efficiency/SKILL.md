@@ -1,7 +1,7 @@
 ---
 name: token-efficiency
 description: Use when a session is burning tokens or context quickly, when a task will run long, or before starting a new task in an existing session. Lists practices that cut usage without lowering code quality, tells the agent when to proactively offer a fresh session, and sets the quality guards that efficiency must never trade away.
-version: 1.1.0
+version: 1.2.0
 ---
 
 # Token Efficiency Standard (No Quality Trade-offs)
@@ -24,7 +24,11 @@ Do not use for: deciding what to build (use the delivery workflow skills) or for
 ## 1. Session hygiene (largest saving)
 
 - One task per session. When the topic changes (review, then feature, then deploy), start a new session.
-- Before ending a session, write a handoff of at most 10 lines: goal, state, decisions, open items, next command. Start the next session from that note, not from the old history.
+- Before a handoff or archive, and at the end of any session that changed or learned something, record progress in the repo's docs. Skip it only when the session changed and learned nothing.
+  1. Add a dated entry at the top of `docs/PROGRESS.md`: goal, done (commits, tickets), decisions, open items, next step. At most 10 lines.
+  2. Move new facts into the topic doc they belong to, and refresh its verified stamp and its `docs/INDEX.md` line.
+  3. Write the handoff note so it points to that entry instead of repeating it.
+- Start the next session from the handoff note and `docs/PROGRESS.md`, not from the old history.
 - Do not keep a failed approach in context: after a dead end, summarise the learning in one line and move on.
 
 ## Proactive new-session prompt
@@ -41,7 +45,8 @@ Offer a fresh session when ANY of these is true and the work is at a stopping po
 How to offer it:
 
 - Put it at the end of a turn, never mid-edit, mid-test or mid-deploy, and never while a decision is pending.
-- Keep it to a few lines: why now (for example "context is large and this task is done"), a handoff of at most 10 lines (goal, state, decisions, open items, next step), and a yes/no choice to start the new session with that handoff.
+- First record progress in `docs/PROGRESS.md` (section 1).
+- Keep it to a few lines: why now (for example "context is large and this task is done"), a handoff that points to the `docs/PROGRESS.md` entry, and a yes/no choice to start the new session with that handoff.
 - Ask at most once per boundary. If the user declines, continue and do not repeat until the next boundary.
 - Never start the new session or discard context without the user's yes.
 
@@ -88,6 +93,7 @@ How to offer it:
 ## Quick checklist
 
 - [ ] New topic, new session, with a handoff note.
+- [ ] Before a handoff or archive, added the `docs/PROGRESS.md` entry and updated topic docs and `docs/INDEX.md`.
 - [ ] At a boundary (task done, topic switch, context about half full), offered a fresh session once.
 - [ ] Only needed skills and integrations enabled.
 - [ ] Reads are ranged; no repeated reads; no whole-page dumps.
@@ -110,5 +116,6 @@ How to offer it:
 
 ## Changelog
 
+- 1.2.0 (2026-10-29): before a handoff or archive, record progress in `docs/PROGRESS.md` (dated entry, at most 10 lines), move new facts into topic docs and `docs/INDEX.md`, and point the handoff at that entry; added a checklist line.
 - 1.1.0 (2026-10-25): added the proactive new-session prompt (triggers, how to offer, never mid-task).
 - 1.0.0 (2026-10-25): initial version, from a measured long session where history re-reads and large page dumps dominated cost.

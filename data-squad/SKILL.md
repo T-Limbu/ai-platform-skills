@@ -1,7 +1,7 @@
 ---
 name: data-squad
 description: Use when the owner names data-squad or asks to run the squad on a feature, app or pipeline. A role-based delivery checklist (requirements, design, build, QA, retro) that scales ceremony to task size, keeps the regression vault green and stops for owner confirmation before code changes, pushes and deploys. Opt-in only.
-version: 1.1.0
+version: 1.1.1
 ---
 
 # Data Squad Delivery Checklist
@@ -47,7 +47,7 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
 5. **Scrum Master: retro**
    - In a few lines: what shipped, what took longest, and any lesson worth keeping.
    - Propose a lesson as a rule change to the relevant skill only if it recurred or was costly. Never edit a skill without the owner's yes.
-   - Record findings and decisions in the repo's `docs/` and update `docs/INDEX.md`.
+   - Record findings and decisions in the repo's `docs/`, update `docs/INDEX.md`, and add the session's entry to `docs/PROGRESS.md`.
 
 ## Rules
 
@@ -68,5 +68,6 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
 
 ## Changelog
 
+- 1.1.1 (2026-10-29): the retro also adds the session's `docs/PROGRESS.md` entry.
 - 1.1.0 (2026-10-29): step 1 hands non-trivial or delegated work to `ticket-writing`; the retro records findings and decisions in the repo's `docs/` and `docs/INDEX.md`; added `ticket-writing` to Read next.
 - 1.0.0 (2026-10-25): tool-neutral rewrite. Replaced the model dispatch matrix, model-only code-change gate, seniority tiers, CLI and telemetry scorecard with a role-based checklist; roles are steps, with separate agents only for review, parallel work and wide search; added owner confirmation rules and Given-When-Then criteria feeding QA.

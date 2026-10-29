@@ -87,6 +87,7 @@ The real-app check after the tests pass: what to open, what to do, what to see. 
 ## Stop points
 
 * This ticket is the owner's approval for its Scope. On starting, move it to In Progress and post the Baseline counts as a comment.
+* Work in your own git worktree (or the app's worktree option), never in a checkout another session is using.
 * Commit on the ticket's branch (its Linear branch name) and push it. Move the ticket to In Review when the pull request opens.
 * When the full test suite and CI are green, land it on `main`, let `qa` deploy, and run the post-deploy checks (End-to-end, and `ai-platform-sentinel` where the repo has them). Then move the ticket to Done, with the report-back as the completion comment.
 * Stop before prod. Prod always needs the owner's explicit approval; this ticket doesn't grant it. If prod is wanted, post a comment titled "Prod approval needed": what's on `qa`, the evidence, the risk and the rollback. Then stop.

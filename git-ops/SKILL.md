@@ -1,7 +1,7 @@
 ---
 name: git-ops
 description: Use when committing, branching, merging, rebasing, syncing branches such as main and gh-pages, recovering lost commits or stashes, or running GitHub CLI tasks (pull requests, Actions, secrets). Holds field-tested git and gh procedures and the safety rules for pushes and force-pushes.
-version: 0.2.0
+version: 0.2.1
 ---
 
 # Git-Ops & Version Control Skill
@@ -90,7 +90,9 @@ These rules were learned from real production debugging and must always be follo
 6. **Rule [One Topic per Branch]**: When a request changes topic mid-branch (for example a policy change arriving on a docs-skill branch), start a new branch from `main` for it, so each pull request reviews one thing.
 7. **Rule [One Commit per Command]**: Make each commit in its own shell call and check it with `git show --stat HEAD` before the next. Chaining several `git apply` / `git commit` steps with `&&` and heredocs in one call once produced one mixed commit instead of three. Recovery: `git reset <base>` keeps the working tree; then redo the commits one by one.
 8. **Rule [Split Overlapping Work with the Index]**: When later work touches the same files as earlier uncommitted work, stage the earlier part, keep the later part in the working tree, and save one patch per part. Check the patches apply in order on a scratch index (`GIT_INDEX_FILE=<tmp> git read-tree HEAD`, then `git apply --cached`) before relying on them.
+9. **Rule [One Worktree per Session]**: Each ticket session works in its own git worktree (`git worktree add ../<repo>-<ticket> -b <branch> main`, or the app's worktree option), never in a checkout another session is using. A ticket session once switched branches in a shared checkout and left uncommitted edits under a running session.
 
 ## Changelog
 
+- 0.2.1 (2026-10-29): rule 9, one worktree per session, from the Shuttle Feed retro.
 - 0.2.0 (2026-10-29): rules 6-8 from the hub session retro (one topic per branch, one commit per command, splitting overlapping work with the index).

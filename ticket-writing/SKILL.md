@@ -1,7 +1,7 @@
 ---
 name: ticket-writing
 description: Use when turning a review, bug report, plan or owner request into Linear tickets that another model or subagent will pick up in a fresh session, or when splitting or refining such tickets. Each ticket is a self-contained brief (context, objective, how to build, test and run end to end, quality bar, stop points, report-back format), so a reader with none of the original conversation can deliver durable work.
-version: 0.3.3
+version: 0.3.4
 ---
 
 # Ticket Writing
@@ -70,6 +70,7 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
 - **Exact commands.** Give the real commands to set up, run the app, run the tests and check end to end, and the expected result of each.
 - **Every brief has** Must not break, Tests to write, an end-to-end check, Given-When-Then acceptance criteria, stop points and a report-back format.
 - **Stop points are explicit.** An owner-created or owner-approved ticket is the approval for its Scope: the reader commits on the ticket's branch, pushes, lands it on `main` once the full test suite and CI are green, lets `qa` deploy and runs the post-deploy checks. It never deploys to prod, which always needs the owner's explicit approval. It stops and comments on the ticket when anything in the brief turns out wrong or work outside Scope is needed.
+- **Own worktree.** The reader works in its own git worktree (or the app's worktree option), never in a checkout another session is using. The brief's Stop points say so, and so does the kickoff note when the ticket is handed to a session.
 - **Status flow.** The reader moves the ticket to In Progress on starting (and posts the Baseline comment), to In Review when the pull request opens, and to Done after landing on `main` and passing the `qa` checks, with the report-back as the completion comment.
 - **Prod approval request.** After `qa`, if prod is wanted, the reader posts a comment titled "Prod approval needed" (what's on `qa`, the evidence, the risk, the rollback) and stops.
 - Creating tickets publishes them, so create them only when the owner asks. Editing or commenting on other existing tickets needs the owner's yes each time; the reader updates its own ticket as the status flow says.
@@ -88,6 +89,7 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
 
 ## Changelog
 
+- 0.3.4 (2026-10-29): rule and Stop points line: the reader works in its own git worktree, never in a checkout another session uses. From the Shuttle Feed retro: a ticket session switched branches and left uncommitted edits under a running session.
 - 0.3.3 (2026-10-29): Title convention: renaming a ticket changes its Linear branch name, so update the branch name in the brief after any title change.
 - 0.3.2 (2026-10-29): new workflow step: pilot one brief through the cold-read test until it passes, then apply its lessons to the rest of the batch. From the Shuttle Feed retro: both pilot drafts (KSH-286, KSH-289) failed their first cold read.
 - 0.3.1 (2026-10-29): the docs convention detail moved to the `project-docs` skill; this skill now points to it.

@@ -1,7 +1,7 @@
 ---
 name: token-efficiency
 description: Use when a session is burning tokens or context quickly, when a task will run long, or before starting a new task in an existing session. Lists practices that cut usage without lowering code quality, tells the agent when to proactively offer a fresh session, and sets the quality guards that efficiency must never trade away.
-version: 1.2.0
+version: 1.2.1
 ---
 
 # Token Efficiency Standard (No Quality Trade-offs)
@@ -25,7 +25,7 @@ Do not use for: deciding what to build (use the delivery workflow skills) or for
 
 - One task per session. When the topic changes (review, then feature, then deploy), start a new session.
 - Before a handoff or archive, and at the end of any session that changed or learned something, record progress in the repo's docs. Skip it only when the session changed and learned nothing.
-  1. Add a dated entry at the top of `docs/PROGRESS.md`: goal, done (commits, tickets), decisions, open items, next step. At most 10 lines.
+  1. Add a dated entry at the top of `docs/PROGRESS.md`: goal, done (commits, tickets), decisions, open items, next step. At most 10 lines. Keep only the latest 10 entries: when adding the 11th, move the oldest to `docs/progress/<year>.md` (newest first) and list that file in `docs/INDEX.md`.
   2. Move new facts into the topic doc they belong to, and refresh its verified stamp and its `docs/INDEX.md` line.
   3. Write the handoff note so it points to that entry instead of repeating it.
 - Start the next session from the handoff note and `docs/PROGRESS.md`, not from the old history.
@@ -86,7 +86,7 @@ How to offer it:
 
 - Read the code you are about to change before changing it.
 - Keep tests, the regression vault and the QA gate; efficiency never skips a verification step or claims a result that was not checked.
-- Keep confirmation steps for pushes, deploys and anything outward-facing.
+- Keep the approval gates: a ticket whose Scope covers the work, or the owner's confirmation, before code changes and pushes; the owner's explicit approval for every prod deploy; confirmation for anything else outward-facing.
 - Keep secret scrubbing and safety rules in force.
 - If a saving would reduce correctness, do not take it.
 
@@ -116,6 +116,7 @@ How to offer it:
 
 ## Changelog
 
+- 1.2.1 (2026-10-29): quality guard restated for the approval policy (ticket or confirmation for code and pushes; prod always needs the owner's explicit approval); `docs/PROGRESS.md` keeps the latest 10 entries, older ones move to `docs/progress/<year>.md`.
 - 1.2.0 (2026-10-29): before a handoff or archive, record progress in `docs/PROGRESS.md` (dated entry, at most 10 lines), move new facts into topic docs and `docs/INDEX.md`, and point the handoff at that entry; added a checklist line.
 - 1.1.0 (2026-10-25): added the proactive new-session prompt (triggers, how to offer, never mid-task).
 - 1.0.0 (2026-10-25): initial version, from a measured long session where history re-reads and large page dumps dominated cost.

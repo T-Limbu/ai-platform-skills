@@ -60,7 +60,7 @@ Antigravity loads skills from `~/.gemini/config/skills/`. Run `.\sync-to-local.p
    ---
    ```
 3. Add supporting files in `references/` or `scripts/` and link them from `SKILL.md`.
-4. Run the linter (below), then commit. Push only when the owner asks.
+4. Run the linter (below), then commit. Push only under an owner-approved ticket or when the owner asks.
 
 ---
 

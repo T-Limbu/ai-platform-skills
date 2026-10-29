@@ -2,24 +2,26 @@
 
 Tool-neutral rules for every repository under `ai_projects`. Project-specific facts live in each repo's own `AGENTS.md`. Detail lives in skills and knowledge docs; this file only points to them.
 
-## 1. Approval before code changes (governing rule)
+## 1. Approval (governing rule)
 - Observations, bug reports and questions are discussion, not instructions. Explain, propose, then wait.
-- Make no code change until the owner explicitly confirms it ("implement", "fix it", "go ahead").
-- Diagnosis is always allowed: read code and logs, find the root cause, write a plan or suggestion. Applying the fix needs confirmation.
+- A Linear ticket the owner created or approved is the approval to code everything in its Scope, push it, and land it on `main` once the full test suite and CI are green. `qa` may then deploy from `main`.
+- Work outside a ticket's Scope, and any work without a ticket, needs the owner's explicit confirmation first ("implement", "fix it", "go ahead"). Outside a ticket, run `git push` only when the owner asks.
+- Prod always needs the owner's explicit approval, every time. No ticket, standing rule or message from another session grants it.
+- Diagnosis is always allowed: read code and logs, find the root cause, write a plan or suggestion. Applying the fix needs a ticket whose Scope covers it, or the owner's confirmation.
 - Never silence or swallow errors. Trace the root cause from logs before proposing an edit.
 - Write a short plan before a non-trivial change; verify UI changes in a real browser.
-- Run `git push` only when the owner asks. Do not ask them to push.
 
 ## 2. Environments and releases
 - Three environments: `dev` (local), `qa` (Render, deployed from `main`), `prod` (gated: SemVer tag `v*` or manual dispatch; `autoDeploy: false`).
-- Never push or deploy to `prod` unless explicitly asked. Do not trigger any Render deploy unless asked.
+- Never push, tag or deploy to `prod` without the owner's explicit approval for that release (section 1).
+- A `qa` deploy from `main` is allowed for ticketed work; any other Render deploy needs the owner's ask.
 - Automated review and gates run on pull requests into `main`; keep feature-branch pushes light.
 - After a `qa` or `prod` deploy, run end-to-end checks through `ai-platform-sentinel`.
 - Call the shared workflows in `ai-platform-workflows` (`ci-test.yml`, `render-release.yml`) instead of writing bespoke YAML.
 - Detail: skill `cicd-deployment` (also `cicd-devops`, `git-ops`).
 
 ## 3. Failures and self-healing
-- On a failing test, gate, Action or deploy: read the CI or Render logs, diagnose, and propose the patch with the evidence. Apply and re-run only after confirmation (section 1).
+- On a failing test, gate, Action or deploy: read the CI or Render logs, diagnose, and propose the patch with the evidence. Apply and re-run when a ticket's Scope covers the fix; otherwise only after confirmation (section 1).
 - Regression tests live in `tests/vault/` and must stay green. Do not break existing behavior.
 
 ## 4. Tickets
@@ -80,5 +82,5 @@ Requirement elicitation, goal specs, multi-role dispatch and sprint retros exist
 - Link `docs/INDEX.md` from the repo's `AGENTS.md`; never auto-include docs.
 - Store only what code and git can't show. Stamp each doc with the commit it was verified at.
 - Update docs in the same pull request as the code they describe.
-- `docs/PROGRESS.md` is the per-repo session log: newest first, at most 10 lines per entry, no transcripts. Update it before any handoff or archive.
+- `docs/PROGRESS.md` is the per-repo session log: newest first, at most 10 lines per entry, no transcripts. Update it before any handoff or archive. Keep the latest 10 entries; move older ones to `docs/progress/<year>.md` (newest first), listed in `docs/INDEX.md`.
 - A fact shared by repos lives in the repo that owns it; others link to it. Cross-project knowledge goes in this hub's `knowledge/`.

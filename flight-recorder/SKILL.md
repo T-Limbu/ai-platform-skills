@@ -1,7 +1,7 @@
 ---
 name: flight-recorder
 description: Use when building or reviewing a client-facing app, PWA or frontend for a QA or staging environment, or when diagnosing bugs on physical phones. Specifies the mandatory in-app Black Box Flight Recorder with ring buffer, localStorage persistence, lifecycle and error capture, 1-tap copy and optional cloud telemetry.
-version: 1.0.0
+version: 1.1.0
 ---
 
 # In-App Black Box Flight Recorder Standard (Mandatory QA Feature)
@@ -20,7 +20,7 @@ Do not use for: ADB device control (use `mobile-adb`) or release and deploy conf
 
 - A browser frontend where `flightRecorder.ts` can be mounted at application start.
 - Optional telemetry endpoint: the app backend or the Oplox ingestion API for the app id. No credentials are embedded; any key comes from configuration.
-- Making the change in a project needs the owner's explicit confirmation before editing code.
+- Making the change in a project needs an owner-approved ticket covering it, or the owner's explicit confirmation, before editing code.
 
 ## Why this standard exists
 1. **The Mobile DevTools Blind Spot:** Desktop DevTools cannot reproduce Android Knox, iOS WebKit background memory caps, or battery optimization throttling.
@@ -145,8 +145,8 @@ Before QA sign-off on any release candidate:
 ## Rules
 
 - Mandatory on every `qa`, staging or dogfooding build; never log secrets, tokens or personal data.
-- Do not edit a project to add the recorder without the owner's explicit confirmation.
-- Never `git push` without asking the owner.
+- Do not edit a project to add the recorder without an owner-approved ticket covering it, or the owner's explicit confirmation.
+- Push and deploy to `qa` only under such a ticket or when the owner asks. Never deploy to `prod` without the owner's explicit approval.
 
 ## Read next
 
@@ -157,4 +157,5 @@ Before QA sign-off on any release candidate:
 
 ## Changelog
 
+- 1.1.0 (2026-10-29): approval policy. An owner-approved ticket covers adding the recorder, pushing and the `qa` deploy; `prod` always needs the owner's explicit approval.
 - 1.0.0 (2026-10-25): tool-neutral rewrite. Added Use-when triggers, version and standard sections; removed emoji; replaced squad-agent names and the old stakeholder term with the owner.

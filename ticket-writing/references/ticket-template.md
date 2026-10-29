@@ -3,7 +3,7 @@
 Copy the body below into the ticket description. Every section is required unless marked optional. Short is fine; missing isn't.
 
 ```markdown
-**Read first:** [Change Safety Protocol](https://linear.app/kshitij-limbu/document/change-safety-protocol-read-before-starting-any-ticket-8baf630fa1c9). **Blocked by** KSH-NNN (one line: what it delivers that this needs).
+**Read first:** [Change Safety Protocol](https://linear.app/kshitij-limbu/document/change-safety-protocol-read-before-starting-any-ticket-8baf630fa1c9). Where it conflicts with the Stop points below on push, merge or deploy, the Stop points follow the owner's current policy and take precedence. **Blocked by** KSH-NNN (one line: what it delivers that this needs).
 
 ## Objective
 
@@ -78,8 +78,11 @@ The real-app check after the tests pass: what to open, what to do, what to see. 
 
 ## Stop points
 
-* Commit on the ticket's branch (its Linear branch name). Don't push, merge or deploy until the owner says so.
+* This ticket is the owner's approval for its Scope. Commit on the ticket's branch (its Linear branch name) and push it.
+* When the full test suite and CI are green, land it on `main`, let `qa` deploy, and run the post-deploy checks (End-to-end, and `ai-platform-sentinel` where the repo has them).
+* Stop before prod. Prod always needs the owner's explicit approval; this ticket doesn't grant it.
 * Stop and comment on this ticket if:
+  * CI or the `qa` checks stay red after a fix within Scope
   * the baseline is red
   * a fact in Context turns out wrong
   * a file outside Scope needs to change
@@ -91,7 +94,7 @@ Post as a ticket comment:
 
 * what changed and why, and the files touched
 * tests: baseline vs after counts, and the new tests with proof they failed first
-* end-to-end evidence
+* end-to-end evidence, the commit on `main` and the `qa` deploy and check results
 * anything not verified, and follow-ups found (not fixed)
 * docs updated: which `docs/` files changed in this pull request, and the new `INDEX.md` lines
 

@@ -1,7 +1,7 @@
 ---
 name: ticket-writing
 description: Use when turning a review, bug report, plan or owner request into Linear tickets that another model or subagent will pick up in a fresh session, or when splitting or refining such tickets. Each ticket is a self-contained brief (context, objective, how to build, test and run end to end, quality bar, stop points, report-back format), so a reader with none of the original conversation can deliver durable work.
-version: 0.1.0
+version: 0.2.0
 ---
 
 # Ticket Writing
@@ -41,7 +41,7 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
 - **One ticket = one repo = one branch = one pull request.** Cross-repo work becomes linked tickets, one per repo.
 - **Sized for one session.** A model should be able to read the context, build, test and run it end to end within one session's budget. If the brief needs more than about 10 required changes, split it.
 - **Decisions are separate.** If the work can't start until the owner chooses, write an `[Owner decision]` ticket (labels `Spike`, `Role: Architect`) and block the build ticket on it. A model must never have to make a product or security decision mid-build.
-- **Owner-only actions** (secrets, deploy sign-off, account changes) get an `[Owner]` ticket.
+- **Owner-only actions** (secrets, prod sign-off, account changes) get an `[Owner]` ticket.
 - **Group small items by theme and file**; keep security and data-loss items on their own.
 
 ## Field conventions
@@ -64,7 +64,7 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
 - **Objective before steps.** State the outcome and why it matters, so the reader can make sound small choices the brief didn't foresee.
 - **Exact commands.** Give the real commands to set up, run the app, run the tests and check end to end, and the expected result of each.
 - **Every brief has** Must not break, Tests to write, an end-to-end check, Given-When-Then acceptance criteria, stop points and a report-back format.
-- **Stop points are explicit.** The reader commits on the ticket's branch but never pushes, merges or deploys without the owner's go-ahead. It stops and comments on the ticket when anything in the brief turns out wrong.
+- **Stop points are explicit.** An owner-created or owner-approved ticket is the approval for its Scope: the reader commits on the ticket's branch, pushes, lands it on `main` once the full test suite and CI are green, lets `qa` deploy and runs the post-deploy checks. It never deploys to prod, which always needs the owner's explicit approval. It stops and comments on the ticket when anything in the brief turns out wrong or work outside Scope is needed.
 - Creating tickets publishes them, so create them only when the owner asks. Editing or commenting on existing tickets needs the owner's yes each time.
 - Name files, functions and env var names; never machine paths, token values or secrets.
 - No local ticket files. On Done, post a completion comment saying what shipped and what was verified.
@@ -80,4 +80,5 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
 
 ## Changelog
 
+- 0.2.0 (2026-10-29): approval policy. The ticket approves its Scope through landing on `main` after green CI and the `qa` deploy and its checks; the reader stops before prod, which always needs the owner's explicit approval.
 - 0.1.0 (2026-10-29): first version. Tickets are briefs for a cold-start model; adds the quality bar and the cold-read test. Distilled from the Oplox security backlog (KSH-246 to KSH-257) and the Shuttle Feed review (KSH-285 to KSH-295).

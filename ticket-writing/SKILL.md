@@ -1,7 +1,7 @@
 ---
 name: ticket-writing
 description: Use when turning a review, bug report, plan or owner request into Linear tickets that another model or subagent will pick up in a fresh session, or when splitting or refining such tickets. Each ticket is a self-contained brief (context, objective, how to build, test and run end to end, quality bar, stop points, report-back format), so a reader with none of the original conversation can deliver durable work.
-version: 0.3.0
+version: 0.3.1
 ---
 
 # Ticket Writing
@@ -25,7 +25,7 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
 
 ## Workflow
 
-1. **Verify.** Read the `docs/INDEX.md` of every repo the work touches, and the docs it points to that are relevant. Re-read the code behind every finding and cite `file:line` (`~` for approximate). Write any new finding into the owning repo's `docs/` (with the owner's yes, as it's a repo change) so the ticket can link it. Run the commands the brief will tell the reader to run, so they're known to work. Anything unconfirmed is written as "likely", with how to confirm it.
+1. **Verify.** Read the `docs/INDEX.md` of every repo the work touches, and the docs it points to that are relevant. Re-read the code behind every finding and cite `file:line` (`~` for approximate). Write any new finding into the owning repo's `docs/` with the finding template from `project-docs` (with the owner's yes, as it's a repo change) so the ticket can link it. Run the commands the brief will tell the reader to run, so they're known to work. Anything unconfirmed is written as "likely", with how to confirm it.
 2. **Check for existing tickets.**
    - Search the team by key words and file names, and list the project's open tickets. Read any that overlap.
    - A finding that's already covered becomes a link, not a new ticket.
@@ -60,8 +60,8 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
 ## Rules
 
 - **Self-contained.** Restate every fact the reader needs. A linked ticket gets a one-line summary of what matters from it, not just its id. Never write "as discussed", "see above" or "the usual way".
-- **Project docs, linked not copied.** Each repo keeps its own knowledge in `docs/`, with `docs/INDEX.md` as the entry point. A ticket lists the docs it depends on under Context docs, as `repo:path` plus the verified commit, and attaches them as GitHub links, so a session without the other repo checked out can still read them. A fact shared by two repos lives in the repo that **owns** it (the provider of an API or contract), and the other repo links to it. Knowledge used across many projects goes in the hub's `knowledge/` folder.
-- **Bounded reading.** The reader opens the listed docs and follows their links **one level** at most. It doesn't crawl other repos' `docs/`. If something is missing, it stops and comments on the ticket, and the ticket gets the missing doc added.
+- **Project docs, linked not copied.** A ticket lists the docs it depends on under Context docs, as `repo:path` plus the verified commit, attached as GitHub links so a session without that repo can read them. Where docs live and who owns a fact: `project-docs`.
+- **Bounded reading.** The reader opens the listed docs and follows their links **one level** at most, never crawling other repos' `docs/`. If something is missing, it stops and comments on the ticket.
 - **Provenance.** Every brief starts with "Written against: `repo@commit`, date". The reader runs `git log <commit>..HEAD -- <scoped files>` first and re-verifies any `file:line` that moved before trusting it.
 - **Short form for small changes.** One or two files with no cross-repo or data impact: Objective, Context (with `file:line`), Change, Tests, Acceptance, Stop/Report. Anything bigger, or touching stored data, auth, secrets or deploy order, uses the full form (template Variants).
 - **Test data has a source.** The brief says where test accounts, fixture tokens and seed data come from: the project's seed or fixture files, never real credentials. If none exist, creating them is part of the ticket.
@@ -83,9 +83,11 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
 | [references/quality-bar.md](references/quality-bar.md) | Filling the quality bar section |
 | `data-squad` skill | The tickets feed a squad delivery |
 | `git-ops` skill | Starting work on a ticket |
+| `project-docs` skill | Writing or linking a repo's docs |
 
 ## Changelog
 
+- 0.3.1 (2026-10-29): the docs convention detail moved to the `project-docs` skill; this skill now points to it.
 - 0.3.0 (2026-10-29): short form for small tickets; "Written against" provenance with a `git log` re-check; Linear status flow; "Prod approval needed" comment; test data source; feedback loop from the reader's brief gaps. Pilot feedback (KSH-286): CI and `qa` deploy checks, inputs touched, shared-code load order, storage re-validation, catching unblocked hosts in tests, repeated cold reads.
 - 0.2.0 (2026-10-29): approval policy. The ticket approves its Scope through landing on `main` after green CI and the `qa` deploy and its checks; the reader stops before prod, which always needs the owner's explicit approval.
 - 0.1.0 (2026-10-29): first version. Tickets are briefs for a cold-start model; adds the quality bar and the cold-read test. Distilled from the Oplox security backlog (KSH-246 to KSH-257) and the Shuttle Feed review (KSH-285 to KSH-295).

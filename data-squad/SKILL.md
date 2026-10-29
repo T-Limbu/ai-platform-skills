@@ -1,7 +1,7 @@
 ---
 name: data-squad
 description: Use when the owner names data-squad or asks to run the squad on a feature, app or pipeline. A role-based delivery checklist (requirements, design, build, QA, retro) that scales ceremony to task size, keeps the regression vault green, treats an owner-approved ticket as approval to code, land on main and deploy to qa, and always stops for owner approval before prod. Opt-in only.
-version: 1.2.0
+version: 1.2.1
 ---
 
 # Data Squad Delivery Checklist
@@ -67,9 +67,11 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
 | `flight-recorder` skill | Preparing a build for `qa` or mobile testing |
 | `token-efficiency` skill | The task is long or the session is getting expensive |
 | `ticket-writing` skill | Turning work into tickets for another session or subagent |
+| `project-docs` skill | Creating or updating the repo's `docs/`, and the retro's PROGRESS entry |
 
 ## Changelog
 
+- 1.2.1 (2026-10-29): added `project-docs` to Read next.
 - 1.2.0 (2026-10-29): approval policy. An owner-approved ticket approves coding its Scope, landing on `main` after green CI and deploying to `qa`; prod always needs the owner's explicit approval; other work still needs confirmation.
 - 1.1.1 (2026-10-29): the retro also adds the session's `docs/PROGRESS.md` entry.
 - 1.1.0 (2026-10-29): step 1 hands non-trivial or delegated work to `ticket-writing`; the retro records findings and decisions in the repo's `docs/` and `docs/INDEX.md`; added `ticket-writing` to Read next.

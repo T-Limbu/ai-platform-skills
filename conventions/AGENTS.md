@@ -78,9 +78,6 @@ Prefer plain HTTP or a reader-mode fetch for web docs; use a headless browser on
 Requirement elicitation, goal specs, multi-role dispatch and sprint retros exist as skills: `pm-elicitation`, `goal-spec`, `squad-dispatch`, `squad-retro`, `data-squad`. Use them only when the owner names them.
 
 ## 11. Project docs
-- Each repo keeps project knowledge in `docs/`, with `docs/INDEX.md` as the entry point: one line per doc (path, what, when to read, last verified).
-- Link `docs/INDEX.md` from the repo's `AGENTS.md`; never auto-include docs.
-- Store only what code and git can't show. Stamp each doc with the commit it was verified at.
-- Update docs in the same pull request as the code they describe.
-- `docs/PROGRESS.md` is the per-repo session log: newest first, at most 10 lines per entry, no transcripts. Update it before any handoff or archive. Keep the latest 10 entries; move older ones to `docs/progress/<year>.md` (newest first), listed in `docs/INDEX.md`.
-- A fact shared by repos lives in the repo that owns it; others link to it. Cross-project knowledge goes in this hub's `knowledge/`.
+- Each repo keeps project knowledge in `docs/`, with `docs/INDEX.md` as the entry point, linked from its `AGENTS.md` (never auto-included). `docs/PROGRESS.md` is the session log, updated before any handoff or archive.
+- Shared facts live in the owning repo; cross-project knowledge goes in this hub's `knowledge/`.
+- Rules, templates, rotation and the checker: skill `project-docs`.

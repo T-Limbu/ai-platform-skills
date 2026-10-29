@@ -75,7 +75,7 @@ Batch, transcription and scrape jobs run as GitHub Actions `workflow_dispatch` w
 Prefer plain HTTP or a reader-mode fetch for web docs; use a headless browser only when interaction is needed. Scripts write bulk output to disk and print a summary. Skill: `web-extraction` (planned).
 
 ## 10. Optional workflows (opt-in, never always-on)
-Requirement elicitation, goal specs, multi-role dispatch and sprint retros exist as skills: `pm-elicitation`, `goal-spec`, `squad-dispatch`, `squad-retro`, `data-squad`. Use them only when the owner names them.
+Requirements, design, build, QA and retros run as one role-based checklist in the `data-squad` skill; the retro is its step 5. Use it only when the owner names it.
 
 ## 11. Project docs
 - Each repo keeps project knowledge in `docs/`, with `docs/INDEX.md` as the entry point, linked from its `AGENTS.md` (never auto-included). `docs/PROGRESS.md` is the session log, updated before any handoff or archive.

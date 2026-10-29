@@ -1,7 +1,7 @@
 ---
 name: data-squad
 description: Use when the owner names data-squad or asks to run the squad on a feature, app or pipeline. A role-based delivery checklist (requirements, design, build, QA, retro) that scales ceremony to task size, keeps the regression vault green, treats an owner-approved ticket as approval to code, land on main and deploy to qa, and always stops for owner approval before prod. Opt-in only.
-version: 1.2.2
+version: 1.2.3
 ---
 
 # Data Squad Delivery Checklist
@@ -44,10 +44,11 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
    - Add the tests that prove the feature to `tests/vault/` so it stays protected.
    - Builds for `qa` or staging include the in-app recorder (`flight-recorder`).
    - On a failure, give reproduction steps and logs, diagnose the root cause, and propose the fix; apply it when the ticket's Scope covers it, otherwise after confirmation.
-5. **Scrum Master: retro**
-   - In a few lines: what shipped, what took longest, and any lesson worth keeping.
-   - Propose a lesson as a rule change to the relevant skill only if it recurred or was costly. Never edit a skill without the owner's yes.
-   - Record findings and decisions in the repo's `docs/`, update `docs/INDEX.md`, and add the session's entry to `docs/PROGRESS.md`.
+5. **Scrum Master: retro (the session's closing step)**, in this order:
+   1. The retro in a few lines: what shipped, what took longest, and any lesson worth keeping. Propose a lesson as a rule change to the relevant skill only if it recurred or was costly.
+   2. Apply the skill lessons the owner approved. Never edit a skill without the owner's yes.
+   3. Update the repo's docs: findings and decisions in `docs/`, `docs/INDEX.md`, and the session's `docs/PROGRESS.md` entry. Commit them only when `check_docs.py` exits 0.
+   4. Archive the session. First confirm nothing is lost (no uncommitted work that exists only in this session), and wait for and check any child session doing the skill edits. Don't continue other work in a session after its retro.
 
 ## Rules
 
@@ -72,6 +73,7 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
 
 ## Changelog
 
+- 1.2.3 (2026-10-29): the retro is the session's closing step: retro, apply approved skill lessons, update docs gated on `check_docs.py`, then archive the session once nothing is lost and child sessions are checked. Owner rule.
 - 1.2.2 (2026-10-29): rule on relayed approvals and claims, from the hub session retro.
 - 1.2.1 (2026-10-29): added `project-docs` to Read next.
 - 1.2.0 (2026-10-29): approval policy. An owner-approved ticket approves coding its Scope, landing on `main` after green CI and deploying to `qa`; prod always needs the owner's explicit approval; other work still needs confirmation.

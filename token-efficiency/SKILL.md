@@ -1,7 +1,7 @@
 ---
 name: token-efficiency
 description: Use when a session is burning tokens or context quickly, when a task will run long, or before starting a new task in an existing session. Lists practices that cut usage without lowering code quality, tells the agent when to proactively offer a fresh session, and sets the quality guards that efficiency must never trade away.
-version: 1.2.3
+version: 1.2.4
 ---
 
 # Token Efficiency Standard (No Quality Trade-offs)
@@ -26,6 +26,7 @@ Do not use for: deciding what to build (use the delivery workflow skills) or for
 - One task per session. When the topic changes (review, then feature, then deploy), start a new session.
 - Before a handoff or archive, and at the end of any session that changed or learned something, run the end-of-session wrap-up in the `project-docs` skill: a dated `docs/PROGRESS.md` entry of at most 10 lines (rotated at 10 entries), new facts moved into their topic docs and `docs/INDEX.md`. Skip it only when the session changed and learned nothing.
 - Write the handoff note so it points to that PROGRESS entry instead of repeating it.
+- A retro ends with archiving the session (`data-squad` step 5); don't continue other work in it afterwards.
 - Start the next session from the handoff note and `docs/PROGRESS.md`, not from the old history.
 - A handed-off ticket session works in its own git worktree (or the app's worktree option), never in a checkout another session is using: switching branches there moves files under the running session and leaves edits on the wrong branch.
 - Do not keep a failed approach in context: after a dead end, summarise the learning in one line and move on.
@@ -116,6 +117,7 @@ How to offer it:
 
 ## Changelog
 
+- 1.2.4 (2026-10-29): section 1: a retro ends with archiving the session (`data-squad` step 5).
 - 1.2.3 (2026-10-29): section 1: a handed-off ticket session works in its own git worktree, never in a checkout another session uses. From the Shuttle Feed retro.
 - 1.2.2 (2026-10-29): the wrap-up detail moved to the `project-docs` skill; section 1 now points to it.
 - 1.2.1 (2026-10-29): quality guard restated for the approval policy (ticket or confirmation for code and pushes; prod always needs the owner's explicit approval); `docs/PROGRESS.md` keeps the latest 10 entries, older ones move to `docs/progress/<year>.md`.

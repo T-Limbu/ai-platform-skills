@@ -1,7 +1,7 @@
 ---
 name: ticket-writing
 description: Use when turning a review, bug report, plan or owner request into Linear tickets that another model or subagent will pick up in a fresh session, or when splitting or refining such tickets. Each ticket is a self-contained brief (context, objective, how to build, test and run end to end, quality bar, stop points, report-back format), so a reader with none of the original conversation can deliver durable work.
-version: 0.3.1
+version: 0.3.2
 ---
 
 # Ticket Writing
@@ -31,11 +31,12 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
    - A finding that's already covered becomes a link, not a new ticket.
    - Look for **gaps between tickets**: a planned change in one repo that silently breaks another app. That gap is a ticket of its own.
 3. **Slice.** Follow the slicing rules below. Draft the titles and priorities first; for more than about 8 tickets, show the list to the owner before writing the bodies.
-4. **Write each brief** with [references/ticket-template.md](references/ticket-template.md). Fill the quality bar from [references/quality-bar.md](references/quality-bar.md): keep only the items that apply, and make each one specific to this ticket.
-5. **Cold-read test.** Before creating, give one draft to a fresh-context reviewer (a subagent with no conversation history) and ask: "What would you need to ask before starting? What would you guess?" Fix the brief until the answer is "nothing", and repeat until the verdict is yes; most first drafts fail. For a batch, test the most complex ticket, then apply the lessons to the rest.
-6. **Create and link.** Set the fields per the conventions below. Create blocking tickets first, so later tickets can name them.
-7. **Report back** with a table of ticket links, project and priority, plus any overlap with existing tickets.
-8. **Learn from each worked ticket.** Read the reader's "Brief gaps" in its report-back: what it had to ask or guess. A gap that recurs across tickets becomes a change to the template or quality bar (with the owner's yes, as it's a skill change).
+4. **Pilot, then write the rest.** For a batch, write one brief first (the most complex) and take it through the cold-read test in step 6 until the verdict is yes. Apply what it taught to the other briefs before writing them. First drafts usually fail: both pilot briefs (KSH-286, KSH-289) failed their first cold read on real defects.
+5. **Write each brief** with [references/ticket-template.md](references/ticket-template.md). Fill the quality bar from [references/quality-bar.md](references/quality-bar.md): keep only the items that apply, and make each one specific to this ticket.
+6. **Cold-read test.** Before creating, give a draft to a fresh-context reviewer (a subagent with no conversation history) and ask: "What would you need to ask before starting? What would you guess?" Fix the brief until the answer is "nothing", and repeat until the verdict is yes.
+7. **Create and link.** Set the fields per the conventions below. Create blocking tickets first, so later tickets can name them.
+8. **Report back** with a table of ticket links, project and priority, plus any overlap with existing tickets.
+9. **Learn from each worked ticket.** Read the reader's "Brief gaps" in its report-back: what it had to ask or guess. A gap that recurs across tickets becomes a change to the template or quality bar (with the owner's yes, as it's a skill change).
 
 ## Slicing rules
 
@@ -87,6 +88,7 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
 
 ## Changelog
 
+- 0.3.2 (2026-10-29): new workflow step: pilot one brief through the cold-read test until it passes, then apply its lessons to the rest of the batch. From the Shuttle Feed retro: both pilot drafts (KSH-286, KSH-289) failed their first cold read.
 - 0.3.1 (2026-10-29): the docs convention detail moved to the `project-docs` skill; this skill now points to it.
 - 0.3.0 (2026-10-29): short form for small tickets; "Written against" provenance with a `git log` re-check; Linear status flow; "Prod approval needed" comment; test data source; feedback loop from the reader's brief gaps. Pilot feedback (KSH-286): CI and `qa` deploy checks, inputs touched, shared-code load order, storage re-validation, catching unblocked hosts in tests, repeated cold reads.
 - 0.2.0 (2026-10-29): approval policy. The ticket approves its Scope through landing on `main` after green CI and the `qa` deploy and its checks; the reader stops before prod, which always needs the owner's explicit approval.

@@ -49,6 +49,12 @@ Antigravity loads skills from `~/.gemini/config/skills/`. Run `.\sync-to-local.p
 
 ---
 
+## Project docs
+
+This repo's own decisions, findings and session log start at [docs/INDEX.md](docs/INDEX.md) (convention: `project-docs` skill).
+
+---
+
 ## 🏛️ Contributing a New Skill
 
 1. Create a subfolder: `<skill-name>/` at the repo root

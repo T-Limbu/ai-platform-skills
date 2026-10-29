@@ -1,7 +1,7 @@
 ---
 name: project-docs
 description: Use when creating, updating or checking a repo's docs/ folder (INDEX, architecture, runbook, integrations, findings, decisions, PROGRESS), when a ticket needs a fact written down to link it, or at the end of a session that changed or learned something. Holds the docs convention, one template per doc type and a checker script.
-version: 0.1.0
+version: 0.1.1
 ---
 
 # Project Docs
@@ -39,7 +39,7 @@ Do not use for: code comments or API reference generated from code, or the hub's
 3. **Stamp each doc** with the commit you verified it against, and add its INDEX line.
 4. **Link `docs/INDEX.md` from the repo's `AGENTS.md`.** Never auto-include docs into agent context; readers open what the INDEX says they need.
 5. **Check** with `python <skills>/project-docs/scripts/check_docs.py <repo>` and fix every error.
-6. Commit the docs in their own pull request (or with the code they describe), under a ticket or the owner's confirmation.
+6. Once the check exits 0, commit the docs in their own pull request (or with the code they describe), under a ticket or the owner's confirmation.
 
 ## Workflow: end-of-session wrap-up
 
@@ -55,6 +55,7 @@ Run it before a handoff or archive, and at the end of any session that changed o
 - **Store / don't store.** Store: why things are the way they are, contracts, invariants, gotchas, verified findings, decisions, the commands that work. Don't store: what the code or `git log` already shows, transcripts, secrets or token values, machine paths, or guesses (mark "likely" with how to confirm).
 - **Verified stamp.** Every topic doc carries `Verified against \`<sha>\`, <date>` near the top. Re-verify before trusting a doc whose named files changed a lot since that commit.
 - **Owning repo.** A fact shared by repos lives in the repo that owns it (the provider of an API or contract); other repos link to it. Cross-project knowledge goes in the hub's `knowledge/`.
+- **Commit only on a passing check.** Commit docs changes only when `check_docs.py` exits 0. Gate on the exit code, not on piped output: `cmd | tail && git commit` takes `tail`'s exit code and commits even when the check fails. Example: `python check_docs.py . && git commit …`.
 - **Same pull request.** Update docs in the same pull request as the code they describe.
 - **Bounded reading.** Tickets list their Context docs as `repo:path` with the verified commit, attached as GitHub links. Readers follow links one level at most.
 - **Rotation.** `docs/PROGRESS.md` holds at most 10 entries of at most 10 lines; older entries live in `docs/progress/<year>.md`.
@@ -75,4 +76,5 @@ Run it before a handoff or archive, and at the end of any session that changed o
 
 ## Changelog
 
+- 0.1.1 (2026-10-29): rule: commit docs only when `check_docs.py` exits 0, gated on the exit code rather than piped output.
 - 0.1.0 (2026-10-29): first version. Docs convention moved here from `conventions/AGENTS.md` and `ticket-writing`; templates per doc type; end-of-session wrap-up with PROGRESS rotation; `check_docs.py`.

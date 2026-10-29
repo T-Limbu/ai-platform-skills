@@ -1,8 +1,10 @@
 # Ticket template (brief for a cold-start model)
 
-Copy the body below into the ticket description. Every section is required unless marked optional. Short is fine; missing isn't.
+Copy the body below into the ticket description. Every section is required unless marked optional. Short is fine; missing isn't. For a small change, use the short form under Variants.
 
 ```markdown
+**Written against:** `repo@abc1234`, 2026-10-29. Before trusting any `file:line` below, run `git log abc1234..HEAD -- <scoped files>` and re-verify each one that moved.
+
 **Read first:** [Change Safety Protocol](https://linear.app/kshitij-limbu/document/change-safety-protocol-read-before-starting-any-ticket-8baf630fa1c9). Where it conflicts with the Stop points below on push, merge or deploy, the Stop points follow the owner's current policy and take precedence. **Blocked by** KSH-NNN (one line: what it delivers that this needs).
 
 ## Objective
@@ -23,6 +25,7 @@ What the reader needs to know and can't get from this ticket's code alone. Summa
 * **System:** what the app is, its stack, and where this code sits.
   Example: "Static Vue 3 page `index.html`; syncs to the Oplox hub API; talks to the feeder over Web Bluetooth."
 * **How it works today:** the relevant flow, step by step, with `file:line` for each step.
+* **Inputs:** every input the change touches (URL params, storage keys, headers): what happens to each, including the ones to ignore.
 * **What's wrong or missing:** each fact with `file:line`. Lead with the consequence, then the mechanism. Mark anything unconfirmed as "likely", with how to confirm it.
 * **Related work:** each linked ticket with one line on what it changes that affects this one.
 * **Terms:** any name that isn't obvious (app ids, legacy names, hardware terms).
@@ -37,6 +40,7 @@ What the reader needs to know and can't get from this ticket's code alone. Summa
 1. Numbered, concrete changes: what, not keystrokes.
 2. Exact values, limits, defaults, names and formats.
 3. What must stay unchanged (ids, routes, response shapes, storage keys).
+4. Shared code: where it lives, and the load order that makes it available to each file that uses it.
 
 ## Quality bar
 
@@ -49,7 +53,10 @@ Example: "Durability: deletes survive a failed request; set the pending-sync fla
 * Run the app: `<command>` → `<url or how to open it>`
 * Unit and vault tests: `<command>` → expected baseline (for example "132 passed")
 * End to end: `<command or manual steps>`
+* CI: how CI runs the tests (the runner, and the test-file style it expects).
+* `qa` deploy check: how to confirm the deploy finished without dashboard access (for example, poll the `qa` URL for a marker from this change).
 * External services: how they're mocked or blocked in tests (never hit real ones).
+* Test data: where test accounts, fixture tokens and seed data come from (the project's seed or fixture files, never real credentials). If none exist, creating them is part of this ticket.
 
 ## Build plan
 
@@ -67,6 +74,7 @@ Example: "Durability: deletes survive a failed request; set the pending-sync fla
 
 * One bullet per test: setup, action, expected result.
 * Location (usually `tests/vault/`), plus any CI file that needs the new test added.
+* If the test harness blocks only some hosts, how the test catches requests to the others.
 
 ## End-to-end check
 
@@ -78,9 +86,10 @@ The real-app check after the tests pass: what to open, what to do, what to see. 
 
 ## Stop points
 
-* This ticket is the owner's approval for its Scope. Commit on the ticket's branch (its Linear branch name) and push it.
-* When the full test suite and CI are green, land it on `main`, let `qa` deploy, and run the post-deploy checks (End-to-end, and `ai-platform-sentinel` where the repo has them).
-* Stop before prod. Prod always needs the owner's explicit approval; this ticket doesn't grant it.
+* This ticket is the owner's approval for its Scope. On starting, move it to In Progress and post the Baseline counts as a comment.
+* Commit on the ticket's branch (its Linear branch name) and push it. Move the ticket to In Review when the pull request opens.
+* When the full test suite and CI are green, land it on `main`, let `qa` deploy, and run the post-deploy checks (End-to-end, and `ai-platform-sentinel` where the repo has them). Then move the ticket to Done, with the report-back as the completion comment.
+* Stop before prod. Prod always needs the owner's explicit approval; this ticket doesn't grant it. If prod is wanted, post a comment titled "Prod approval needed": what's on `qa`, the evidence, the risk and the rollback. Then stop.
 * Stop and comment on this ticket if:
   * CI or the `qa` checks stay red after a fix within Scope
   * the baseline is red
@@ -97,6 +106,7 @@ Post as a ticket comment:
 * end-to-end evidence, the commit on `main` and the `qa` deploy and check results
 * anything not verified, and follow-ups found (not fixed)
 * docs updated: which `docs/` files changed in this pull request, and the new `INDEX.md` lines
+* brief gaps: questions I had to answer myself, and what I guessed
 
 ## Deployment (optional)
 
@@ -108,6 +118,17 @@ Revert the pull request, or the migration rollback steps.
 ```
 
 ## Variants
+
+**Short form** for a change to one or two files with no cross-repo or data impact. Keep the Written against line, then:
+
+- **Objective:** the outcome and why.
+- **Context:** how it works today and what's wrong, with `file:line`.
+- **Change:** the numbered changes, with exact values.
+- **Tests:** the commands with the expected baseline, the tests to write, and the test data.
+- **Acceptance:** Given-When-Then.
+- **Stop / Report:** the Stop points and Report back sections above, unchanged.
+
+Use the full form instead when the change touches three or more files, another repo, stored data, auth or secrets, or a deploy order.
 
 **`[Owner decision]`** keeps Objective and Context, then replaces the build sections with:
 
@@ -122,7 +143,9 @@ Revert the pull request, or the migration rollback steps.
 ## Checklist before creating
 
 - [ ] Could a model with only the repo and this ticket start without asking a question? (Cold-read test passed.)
+- [ ] The Written against line names the commit the `file:line` references were checked at.
 - [ ] Every `file:line` was checked against current code, and every command was run.
+- [ ] Test data has a named source, and no real credentials.
 - [ ] Linked tickets are summarised in a line, not just named.
 - [ ] Context docs exist on `main` at the listed commits, and are attached as links.
 - [ ] One repo, one pull request, sized for one session.

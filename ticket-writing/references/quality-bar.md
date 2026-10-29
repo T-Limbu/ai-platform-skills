@@ -18,7 +18,7 @@ Pick the items that apply to the ticket and rewrite each one as a concrete requi
 
 ## Safety and security
 
-- **Input validation:** anything from URLs, storage, the network or other apps is validated before use.
+- **Input validation:** anything from URLs, storage, the network or other apps is validated before use. Values read back from storage are re-validated, not trusted.
 - **Secrets and tokens:** never in URLs after load, logs, telemetry or test fixtures. Only allow-listed hosts receive credentials.
 - **Hardware and physical safety:** a universal stop always works, and nothing can start motion the user didn't ask for.
 - **Least privilege:** tokens scoped to the app, routes checked for permission.

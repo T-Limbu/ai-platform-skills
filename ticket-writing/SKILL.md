@@ -1,7 +1,7 @@
 ---
 name: ticket-writing
 description: Use when turning a review, bug report, plan or owner request into Linear tickets that another model or subagent will pick up in a fresh session, or when splitting or refining such tickets. Each ticket is a self-contained brief (context, objective, how to build, test and run end to end, quality bar, stop points, report-back format), so a reader with none of the original conversation can deliver durable work.
-version: 0.2.0
+version: 0.3.0
 ---
 
 # Ticket Writing
@@ -32,9 +32,10 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
    - Look for **gaps between tickets**: a planned change in one repo that silently breaks another app. That gap is a ticket of its own.
 3. **Slice.** Follow the slicing rules below. Draft the titles and priorities first; for more than about 8 tickets, show the list to the owner before writing the bodies.
 4. **Write each brief** with [references/ticket-template.md](references/ticket-template.md). Fill the quality bar from [references/quality-bar.md](references/quality-bar.md): keep only the items that apply, and make each one specific to this ticket.
-5. **Cold-read test.** Before creating, give one draft to a fresh-context reviewer (a subagent with no conversation history) and ask: "What would you need to ask before starting? What would you guess?" Fix the brief until the answer is "nothing". For a batch, test the most complex ticket, then apply the lessons to the rest.
+5. **Cold-read test.** Before creating, give one draft to a fresh-context reviewer (a subagent with no conversation history) and ask: "What would you need to ask before starting? What would you guess?" Fix the brief until the answer is "nothing", and repeat until the verdict is yes; most first drafts fail. For a batch, test the most complex ticket, then apply the lessons to the rest.
 6. **Create and link.** Set the fields per the conventions below. Create blocking tickets first, so later tickets can name them.
 7. **Report back** with a table of ticket links, project and priority, plus any overlap with existing tickets.
+8. **Learn from each worked ticket.** Read the reader's "Brief gaps" in its report-back: what it had to ask or guess. A gap that recurs across tickets becomes a change to the template or quality bar (with the owner's yes, as it's a skill change).
 
 ## Slicing rules
 
@@ -61,11 +62,16 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
 - **Self-contained.** Restate every fact the reader needs. A linked ticket gets a one-line summary of what matters from it, not just its id. Never write "as discussed", "see above" or "the usual way".
 - **Project docs, linked not copied.** Each repo keeps its own knowledge in `docs/`, with `docs/INDEX.md` as the entry point. A ticket lists the docs it depends on under Context docs, as `repo:path` plus the verified commit, and attaches them as GitHub links, so a session without the other repo checked out can still read them. A fact shared by two repos lives in the repo that **owns** it (the provider of an API or contract), and the other repo links to it. Knowledge used across many projects goes in the hub's `knowledge/` folder.
 - **Bounded reading.** The reader opens the listed docs and follows their links **one level** at most. It doesn't crawl other repos' `docs/`. If something is missing, it stops and comments on the ticket, and the ticket gets the missing doc added.
+- **Provenance.** Every brief starts with "Written against: `repo@commit`, date". The reader runs `git log <commit>..HEAD -- <scoped files>` first and re-verifies any `file:line` that moved before trusting it.
+- **Short form for small changes.** One or two files with no cross-repo or data impact: Objective, Context (with `file:line`), Change, Tests, Acceptance, Stop/Report. Anything bigger, or touching stored data, auth, secrets or deploy order, uses the full form (template Variants).
+- **Test data has a source.** The brief says where test accounts, fixture tokens and seed data come from: the project's seed or fixture files, never real credentials. If none exist, creating them is part of the ticket.
 - **Objective before steps.** State the outcome and why it matters, so the reader can make sound small choices the brief didn't foresee.
 - **Exact commands.** Give the real commands to set up, run the app, run the tests and check end to end, and the expected result of each.
 - **Every brief has** Must not break, Tests to write, an end-to-end check, Given-When-Then acceptance criteria, stop points and a report-back format.
 - **Stop points are explicit.** An owner-created or owner-approved ticket is the approval for its Scope: the reader commits on the ticket's branch, pushes, lands it on `main` once the full test suite and CI are green, lets `qa` deploy and runs the post-deploy checks. It never deploys to prod, which always needs the owner's explicit approval. It stops and comments on the ticket when anything in the brief turns out wrong or work outside Scope is needed.
-- Creating tickets publishes them, so create them only when the owner asks. Editing or commenting on existing tickets needs the owner's yes each time.
+- **Status flow.** The reader moves the ticket to In Progress on starting (and posts the Baseline comment), to In Review when the pull request opens, and to Done after landing on `main` and passing the `qa` checks, with the report-back as the completion comment.
+- **Prod approval request.** After `qa`, if prod is wanted, the reader posts a comment titled "Prod approval needed" (what's on `qa`, the evidence, the risk, the rollback) and stops.
+- Creating tickets publishes them, so create them only when the owner asks. Editing or commenting on other existing tickets needs the owner's yes each time; the reader updates its own ticket as the status flow says.
 - Name files, functions and env var names; never machine paths, token values or secrets.
 - No local ticket files. On Done, post a completion comment saying what shipped and what was verified.
 
@@ -80,5 +86,6 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
 
 ## Changelog
 
+- 0.3.0 (2026-10-29): short form for small tickets; "Written against" provenance with a `git log` re-check; Linear status flow; "Prod approval needed" comment; test data source; feedback loop from the reader's brief gaps. Pilot feedback (KSH-286): CI and `qa` deploy checks, inputs touched, shared-code load order, storage re-validation, catching unblocked hosts in tests, repeated cold reads.
 - 0.2.0 (2026-10-29): approval policy. The ticket approves its Scope through landing on `main` after green CI and the `qa` deploy and its checks; the reader stops before prod, which always needs the owner's explicit approval.
 - 0.1.0 (2026-10-29): first version. Tickets are briefs for a cold-start model; adds the quality bar and the cold-read test. Distilled from the Oplox security backlog (KSH-246 to KSH-257) and the Shuttle Feed review (KSH-285 to KSH-295).

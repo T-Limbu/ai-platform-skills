@@ -1,7 +1,7 @@
 ---
 name: token-efficiency
 description: Use when a session is burning tokens or context quickly, when a task will run long, or before starting a new task in an existing session. Lists practices that cut usage without lowering code quality, tells the agent when to proactively offer a fresh session, and sets the quality guards that efficiency must never trade away.
-version: 1.2.4
+version: 1.3.0
 ---
 
 # Token Efficiency Standard (No Quality Trade-offs)
@@ -115,8 +115,15 @@ How to offer it:
 | `flight-recorder` skill | Diagnosing issues from compact logs instead of long transcripts |
 | `project-docs` skill | Running the end-of-session wrap-up |
 
+## Fresh session means independent
+
+- A fresh session is a new, independent session, never nested under the one that starts it. Start it with a prompt that carries on the task (handoff of at most 10 lines pointing to the `docs/PROGRESS.md` entry), then detach it (`detach_session`) and archive the old session.
+- One handoff per session. A session started for a ticket never starts or proposes the next session itself; it reports back to whoever started it, and the next session is started from there. Do not put "start the next session" in a child session's brief: it creates a nested chain where every session inherits its parent.
+- Archive only when nothing is lost (no uncommitted work that exists only in this session) and no decision is pending.
+
 ## Changelog
 
+- 1.3.0 (2026-10-30): new section "Fresh session means independent": start detached with a carry-on prompt, archive the old session, one handoff per session, children never spawn the next session. Owner rule, from the Shuttle Feed ticket chain.
 - 1.2.4 (2026-10-29): section 1: a retro ends with archiving the session (`data-squad` step 5).
 - 1.2.3 (2026-10-29): section 1: a handed-off ticket session works in its own git worktree, never in a checkout another session uses. From the Shuttle Feed retro.
 - 1.2.2 (2026-10-29): the wrap-up detail moved to the `project-docs` skill; section 1 now points to it.

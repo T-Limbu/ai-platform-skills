@@ -37,6 +37,8 @@ Tool-neutral rules for every repository under `ai_projects`. Project-specific fa
 ## 6. Repos
 Apps are `ai-app-*`, platform is `ai-platform-*`. One repo per session: do implementation in the target repo's own workspace.
 
+A fresh session is independent, never nested: start it with a carry-on prompt (handoff of at most 10 lines), detach it, then archive the old session. A session started for a task never starts the next one; it reports back. See the `token-efficiency` skill, "Fresh session means independent".
+
 | Folder | Role |
 | -- | -- |
 | ai-app-audio-gym | Audio training PWA (React) |

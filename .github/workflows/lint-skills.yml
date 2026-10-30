@@ -16,6 +16,9 @@ jobs:
   lint:
     name: Skill linter and self-tests
     runs-on: ubuntu-latest
+    env:
+      # Tests import skill scripts; without this they leave __pycache__ inside skills and lint L11 fails.
+      PYTHONDONTWRITEBYTECODE: '1'
 
     steps:
       - name: Check out repository

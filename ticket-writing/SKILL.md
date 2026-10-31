@@ -1,7 +1,7 @@
 ---
 name: ticket-writing
 description: Use when turning a review, bug report, plan or owner request into Linear tickets that another model or subagent will pick up in a fresh session, or when splitting or refining such tickets. Each ticket is a self-contained brief (context, objective, how to build, test and run end to end, quality bar, stop points, report-back format), so a reader with none of the original conversation can deliver durable work.
-version: 0.3.5
+version: 0.3.6
 ---
 
 # Ticket Writing
@@ -67,6 +67,7 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
 - **Short form for small changes.** One or two files with no cross-repo or data impact: Objective, Context (with `file:line`), Change, Tests, Acceptance, Stop/Report. Anything bigger, or touching stored data, auth, secrets or deploy order, uses the full form (template Variants).
 - **Test data has a source.** The brief says where test accounts, fixture tokens and seed data come from: the project's seed or fixture files, never real credentials. If none exist, creating them is part of the ticket.
 - **Objective before steps.** State the outcome and why it matters, so the reader can make sound small choices the brief didn't foresee.
+- **Deploy secrets are listed.** A ticket whose flow ends in a `qa` deploy lists, under Environment and commands, every secret and variable the deploy needs, by name only (for example `RENDER_API_KEY`, `RENDER_SERVICE_ID_QA`, which must be a `srv-…` id, and the app tokens set on the Render service). It tells the reader to verify they exist before starting (`gh secret list`, names only, never print values). If one is missing, the reader comments on the ticket asking the owner to set it and continues with everything that doesn't need it.
 - **Exact commands.** Give the real commands to set up, run the app, run the tests and check end to end, and the expected result of each.
 - **Every brief has** Must not break, Tests to write, an end-to-end check, Given-When-Then acceptance criteria, stop points and a report-back format.
 - **Stop points are explicit.** An owner-created or owner-approved ticket is the approval for its Scope: the reader commits on the ticket's branch, pushes, lands it on `main` once the full test suite and CI are green, lets `qa` deploy and runs the post-deploy checks. It never deploys to prod, which always needs the owner's explicit approval. It stops and comments on the ticket when anything in the brief turns out wrong or work outside Scope is needed.
@@ -89,6 +90,7 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
 
 ## Changelog
 
+- 0.3.6 (2026-10-31): tickets ending in a `qa` deploy list the secrets and variables the deploy needs, and the reader verifies they exist before starting. From the data-squad retro: `qa` deploys for KSH-300 and KSH-325 failed on missing or invalid Render secrets the tickets didn't list.
 - 0.3.5 (2026-10-31): Verify step: run the brief's commands in a clean worktree only. From the repo-wide review retro: a ticket writer's test run deleted Design Vault's untracked SQLite `-shm`/`-wal` files.
 - 0.3.4 (2026-10-29): rule and Stop points line: the reader works in its own git worktree, never in a checkout another session uses. From the Shuttle Feed retro: a ticket session switched branches and left uncommitted edits under a running session.
 - 0.3.3 (2026-10-29): Title convention: renaming a ticket changes its Linear branch name, so update the branch name in the brief after any title change.

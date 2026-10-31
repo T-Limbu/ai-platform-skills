@@ -55,6 +55,7 @@ Example: "Durability: deletes survive a failed request; set the pending-sync fla
 * End to end: `<command or manual steps>`
 * CI: how CI runs the tests (the runner, and the test-file style it expects).
 * `qa` deploy check: how to confirm the deploy finished without dashboard access (for example, poll the `qa` URL for a marker from this change).
+* Deploy secrets (when the flow ends in a `qa` deploy): names of the secrets and variables the deploy needs (for example `RENDER_API_KEY`, `RENDER_SERVICE_ID_QA` as a `srv-…` id, app tokens on the Render service). Before starting, check they exist with `gh secret list` (names only, never print values); if one is missing, comment asking the owner to set it and continue with everything that doesn't need it.
 * External services: how they're mocked or blocked in tests (never hit real ones).
 * Test data: where test accounts, fixture tokens and seed data come from (the project's seed or fixture files, never real credentials). If none exist, creating them is part of this ticket.
 

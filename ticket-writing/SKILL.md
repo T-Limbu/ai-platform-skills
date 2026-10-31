@@ -1,7 +1,7 @@
 ---
 name: ticket-writing
 description: Use when turning a review, bug report, plan or owner request into Linear tickets that another model or subagent will pick up in a fresh session, or when splitting or refining such tickets. Each ticket is a self-contained brief (context, objective, how to build, test and run end to end, quality bar, stop points, report-back format), so a reader with none of the original conversation can deliver durable work.
-version: 0.3.4
+version: 0.3.5
 ---
 
 # Ticket Writing
@@ -25,7 +25,7 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
 
 ## Workflow
 
-1. **Verify.** Read the `docs/INDEX.md` of every repo the work touches, and the docs it points to that are relevant. Re-read the code behind every finding and cite `file:line` (`~` for approximate). Write any new finding into the owning repo's `docs/` with the finding template from `project-docs` (with the owner's yes, as it's a repo change) so the ticket can link it. Run the commands the brief will tell the reader to run, so they're known to work. Anything unconfirmed is written as "likely", with how to confirm it.
+1. **Verify.** Read the `docs/INDEX.md` of every repo the work touches, and the docs it points to that are relevant. Re-read the code behind every finding and cite `file:line` (`~` for approximate). Write any new finding into the owning repo's `docs/` with the finding template from `project-docs` (with the owner's yes, as it's a repo change) so the ticket can link it. Run the commands the brief will tell the reader to run, so they're known to work. Run them in a clean worktree, never in a checkout with uncommitted or untracked work: a verification test run once deleted a repo's untracked SQLite `-shm`/`-wal` files. Anything unconfirmed is written as "likely", with how to confirm it.
 2. **Check for existing tickets.**
    - Search the team by key words and file names, and list the project's open tickets. Read any that overlap.
    - A finding that's already covered becomes a link, not a new ticket.
@@ -89,6 +89,7 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
 
 ## Changelog
 
+- 0.3.5 (2026-10-31): Verify step: run the brief's commands in a clean worktree only. From the repo-wide review retro: a ticket writer's test run deleted Design Vault's untracked SQLite `-shm`/`-wal` files.
 - 0.3.4 (2026-10-29): rule and Stop points line: the reader works in its own git worktree, never in a checkout another session uses. From the Shuttle Feed retro: a ticket session switched branches and left uncommitted edits under a running session.
 - 0.3.3 (2026-10-29): Title convention: renaming a ticket changes its Linear branch name, so update the branch name in the brief after any title change.
 - 0.3.2 (2026-10-29): new workflow step: pilot one brief through the cold-read test until it passes, then apply its lessons to the rest of the batch. From the Shuttle Feed retro: both pilot drafts (KSH-286, KSH-289) failed their first cold read.

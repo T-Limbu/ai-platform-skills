@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Lint SKILL.md skills against the tool-neutral standard (checks L1-L18).
+"""Lint SKILL.md skills against the tool-neutral standard (checks L1-L19).
 
 Usage:
   python scripts/lint_skills.py [PATH ...]            # default: repo root
@@ -104,6 +104,9 @@ HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
 EMOJI_RE = re.compile("[⌀-⏿☀-➿⬀-⯿️"
                       "\U0001f000-\U0001faff]")
 FENCE_RE = re.compile(r"^\s*(```|~~~)")
+# L19 skill references: `name` skill, or skill `name`; optional `plugin:` prefix.
+_SKILL_REF = r"`(?:([a-z0-9-]+):)?([a-z0-9]+(?:-[a-z0-9]+)*)`"
+L19_RES = [re.compile(_SKILL_REF + r" skill\b"), re.compile(r"\bskills? " + _SKILL_REF)]
 
 TEXT_SCRIPT_EXT = {".py", ".sh", ".ps1", ".js", ".mjs", ".ts", ".bat", ".cmd",
                    ".json", ".yml", ".yaml", ".toml", ".txt", ".md", ".rb", ".pl"}
@@ -747,9 +750,63 @@ def lint_all(roots, opts):
                         r[1].append(Finding("L15", "WARN", _rel(os.path.join(sd, "SKILL.md")), 2,
                                             "duplicate skill name '%s' also in: %s" % (
                                                 nm, ", ".join(_rel(x) for x in dirs if x != sd))))
+    known = {os.path.basename(sd) for sd in skills}
+    for sd, fl in results:
+        root = next((r for r in map(os.path.abspath, roots)
+                     if os.path.isdir(r) and sd.startswith(r + os.sep)), None)
+        fl.extend(check_skill_refs(sd, known, root or os.path.abspath(roots[0])))
     for r in results:
         r[1].sort(key=lambda x: (x.path, x.line, x.rule))
     return results
+
+
+def _plugin_name(root):
+    """Return (name, error) from <root>/.claude-plugin/plugin.json."""
+    path = os.path.join(root, ".claude-plugin", "plugin.json")
+    if not os.path.isfile(path):
+        return None, None
+    try:
+        with open(path, encoding="utf-8") as fh:
+            name = json.load(fh).get("name")
+    except (OSError, ValueError, AttributeError) as e:
+        return None, "cannot read .claude-plugin/plugin.json: %s" % e
+    return name, None
+
+
+def check_skill_refs(sd, known, root):
+    """L19: skills named next to the word 'skill' must exist in this lint run."""
+    F = []
+    plugin, perr = _plugin_name(root)
+    reported_perr = False
+    top = os.path.join(sd, "references")
+    files = [os.path.join(sd, "SKILL.md")] + (
+        [p for p in _walk(top) if p.lower().endswith(".md")] if os.path.isdir(top) else [])
+    for p in files:
+        t = _read(p)
+        if t is None:
+            continue
+        lines = t.splitlines()
+        mask = _fence_mask(lines)
+        for ln, line in enumerate(lines, 1):
+            if mask[ln - 1]:
+                continue
+            for r in L19_RES:
+                for m in r.finditer(line):
+                    prefix, name = m.group(1), m.group(2)
+                    if name not in known:
+                        F.append(Finding("L19", "FAIL", _rel(p), ln,
+                                         "referenced skill '%s' does not exist" % name))
+                    elif prefix and perr:
+                        if not reported_perr:
+                            F.append(Finding("L19", "FAIL", _rel(p), ln, perr))
+                            reported_perr = True
+                    elif prefix and plugin is None:
+                        F.append(Finding("L19", "FAIL", _rel(p), ln,
+                                         "prefix '%s' but no .claude-plugin/plugin.json" % prefix))
+                    elif prefix and prefix != plugin:
+                        F.append(Finding("L19", "FAIL", _rel(p), ln,
+                                         "prefix '%s' does not match plugin name '%s'" % (prefix, plugin)))
+    return F
 
 
 def status_of(findings):
@@ -806,7 +863,7 @@ def render(results, fmt, summary_only=False):
 
 def main(argv=None):
     here = os.path.dirname(os.path.abspath(__file__))
-    ap = argparse.ArgumentParser(description="Lint SKILL.md skills (checks L1-L18).")
+    ap = argparse.ArgumentParser(description="Lint SKILL.md skills (checks L1-L19).")
     ap.add_argument("paths", nargs="*", help="directories to scan (default: repo root)")
     ap.add_argument("--format", choices=["text", "github", "json"], default="text")
     ap.add_argument("--base", help="git ref to compare versions against (L16 bump check)")

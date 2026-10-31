@@ -30,18 +30,27 @@
 
 Edit skills here only. Agent runtimes read them from this folder; nothing is copied back.
 
-### Claude Code: directory junctions
+### Claude Code: plugin `squad` from the `t-limbu` marketplace
 
-Link each skill folder instead of copying it, so edits here apply immediately:
+Every skill in this repo ships as one plugin, `squad`. Skills appear as `/squad:<name>`, for example `/squad:data-squad`. The skill folders stay where they are; `.claude-plugin/plugin.json` points at the repo root.
 
-```powershell
-# User level (every repo)
-New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\git-ops" -Target "$PWD\git-ops"
+```bash
+# Install (user scope, every repo)
+claude plugin marketplace add T-Limbu/ai-platform-skills
+claude plugin install squad@t-limbu
 
-# Project level (one repo): link into <repo>\.claude\skills\ and keep the links out of git
+# Update to the latest tagged release
+claude plugin marketplace update t-limbu
+claude plugin update squad@t-limbu
 ```
 
-User level: `cicd-deployment`, `data-squad`, `flight-recorder`, `git-ops`, `mobile-adb`, `project-docs`, `ticket-writing`, `token-efficiency`. Project level: the UI skills in Vue repos, `mobile-pwa-audio` in the audio PWAs, `download-trending` in `ai-app-off-grid-audio` only. A running session reads skills at startup, so check new links in a fresh session.
+Restart the session or run `/reload-plugins` after an install or update.
+
+- **Test a branch** without installing: `claude --plugin-dir <path to your checkout>`. That session loads the checkout's skills as they are on disk.
+- **Old junctions:** remove the directory junctions this README used to describe from `~/.claude/skills`, or each skill loads twice (bare name and `squad:` name).
+- **Cloud sessions** do not load plugins. They use claude.ai account skills instead (KSH-224).
+- **Releasing:** bump `version` in `.claude-plugin/plugin.json`, merge to `main`, then `git tag v<version>` on the merge commit and `git push origin v<version>`. Installed users stay on their version until it changes.
+- **Validate** before a release: `claude plugin validate .`
 
 ### Antigravity: one-way copy
 
@@ -79,4 +88,4 @@ python scripts/lint_skills.py --format github # CI annotations
 python -m unittest discover -s tests          # linter self-tests
 ```
 
-Checks L1-L18 follow the tool-neutral SKILL.md standard. Exit code is 1 when any skill has a FAIL.
+Checks L1-L19 follow the tool-neutral SKILL.md standard. Exit code is 1 when any skill has a FAIL.

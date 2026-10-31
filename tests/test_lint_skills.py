@@ -344,5 +344,89 @@ class ParserAndCli(Base):
         self.assertEqual(doc["totals"], {"PASS": 1})
 
 
+class ReferencedSkillChecks(Base):
+    """L19: a skill named in backticks next to the word 'skill' must exist."""
+
+    def body(self, line):
+        return GOOD_BODY.replace("none\n\n## Changelog", line + "\n\n## Changelog")
+
+    def plugin(self, name):
+        d = os.path.join(self.root, ".claude-plugin")
+        os.makedirs(d, exist_ok=True)
+        with open(os.path.join(d, "plugin.json"), "w", encoding="utf-8") as fh:
+            fh.write('{"name": "%s"}' % name)
+
+    def test_L19_missing_then_present(self):
+        make_skill(self.root, name="a", body=self.body("Use the `b` skill."))
+        hits = fired(self.lint("a"), "L19", "FAIL")
+        self.assertEqual(len(hits), 1)
+        self.assertIn("referenced skill 'b' does not exist", hits[0].msg)
+        self.assertIn("a/SKILL.md", hits[0].path)
+        self.assertGreater(hits[0].line, 1)
+        make_skill(self.root, name="b")
+        self.assertFalse(fired(self.lint("a"), "L19"))
+
+    def test_L19_skill_before_name_form(self):
+        make_skill(self.root, name="a", body=self.body("Read next: skill `b`."))
+        self.assertTrue(fired(self.lint("a"), "L19", "FAIL"))
+
+    def test_L19_self_reference_ok(self):
+        make_skill(self.root, name="a", body=self.body("This `a` skill is the entry."))
+        self.assertFalse(fired(self.lint("a"), "L19"))
+
+    def test_L19_prefix_matches_plugin_name(self):
+        make_skill(self.root, name="a", body=self.body("Use the `squad:b` skill."))
+        make_skill(self.root, name="b")
+        self.plugin("squad")
+        self.assertFalse(fired(self.lint("a"), "L19"))
+
+    def test_L19_prefix_differs_from_plugin_name(self):
+        make_skill(self.root, name="a", body=self.body("Use the `squad:b` skill."))
+        make_skill(self.root, name="b")
+        self.plugin("other")
+        hits = fired(self.lint("a"), "L19", "FAIL")
+        self.assertEqual(len(hits), 1)
+        self.assertIn("prefix 'squad'", hits[0].msg)
+
+    def test_L19_prefix_without_plugin_json(self):
+        make_skill(self.root, name="a", body=self.body("Use the `squad:b` skill."))
+        make_skill(self.root, name="b")
+        hits = fired(self.lint("a"), "L19", "FAIL")
+        self.assertEqual(len(hits), 1)
+        self.assertIn("prefix 'squad' but no .claude-plugin/plugin.json", hits[0].msg)
+
+    def test_L19_ignored_in_code_fence(self):
+        make_skill(self.root, name="a", body=self.body("```\nUse the `b` skill.\n```"))
+        self.assertFalse(fired(self.lint("a"), "L19"))
+
+    def test_L19_needs_word_skill(self):
+        make_skill(self.root, name="a", body=self.body("Planned: `web-extraction` (planned)."))
+        self.assertFalse(fired(self.lint("a"), "L19"))
+
+    def test_L19_checks_references_files(self):
+        make_skill(self.root, name="a", files={"references/x.md": "See the `b` skill.\n"})
+        hits = fired(self.lint("a"), "L19", "FAIL")
+        self.assertEqual(len(hits), 1)
+        self.assertIn("references/x.md", hits[0].path)
+
+    def test_L19_malformed_plugin_json_is_a_finding(self):
+        make_skill(self.root, name="a", body=self.body("Use the `squad:a` skill."))
+        d = os.path.join(self.root, ".claude-plugin")
+        os.makedirs(d)
+        with open(os.path.join(d, "plugin.json"), "w", encoding="utf-8") as fh:
+            fh.write("{not json")
+        hits = fired(self.lint("a"), "L19", "FAIL")
+        self.assertEqual(len(hits), 1)
+        self.assertIn("plugin.json", hits[0].msg)
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(L.main([self.root]), 1)
+
+    def test_current_hub_has_no_L19_findings(self):
+        hub = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+        results = L.lint_all([hub], {})
+        self.assertFalse([f for _, fs in results for f in fs if f.rule == "L19"])
+        self.assertFalse([f for _, fs in results for f in fs if f.level == "FAIL"])
+
+
 if __name__ == "__main__":
     unittest.main()

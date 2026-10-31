@@ -1,5 +1,13 @@
 # Progress
 
+## 2026-10-31 KSH-304 plugin packaging
+
+* **Goal:** ship the hub as the `squad` Claude Code plugin from the `t-limbu` GitHub marketplace, and fail lint on a reference to a missing skill.
+* **Done:** `.claude-plugin/plugin.json` (0.1.0) and `marketplace.json`; lint L19 (referenced skill exists, plugin prefix must match `plugin.json`); `tests/test_plugin_manifest.py` and 10 L19 tests (74 pass, was 56); README install section now uses the plugin. `claude plugin validate .` passes with 2 warnings; `plugin details squad` lists 14 skills, about 1.2k always-on tokens. SKILL.md files unchanged (bare names, per KSH-302 answer 5).
+* **Decisions:** `decisions/2026-10-30-plugin-distribution.md`.
+* **Open:** a logged-in session still has to confirm that Claude resolves a bare skill name next to the `squad:` namespace, and that `/squad:` shows 14 skills; the owner removes the `~/.claude/skills` junctions and updates `ai_projects/CLAUDE.md` and the SessionStart hook.
+* **Next:** after the `v0.1.0` tag, the owner runs the two install commands from the README.
+
 ## 2026-10-30 to 31 repo-wide review, backlog, PR #2
 
 * **Goal:** review all 16 repos in ai_projects, plan how to scale this hub, turn both into Linear tickets, and record the owner's decisions.

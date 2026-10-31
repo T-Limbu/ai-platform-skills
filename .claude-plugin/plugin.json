@@ -1,0 +1,8 @@
+{
+  "name": "squad",
+  "version": "0.1.0",
+  "description": "Squad delivery skills: data-squad, ticket-writing, project-docs, CI/CD, git, mobile and UI standards.",
+  "author": { "name": "T-Limbu" },
+  "repository": "https://github.com/T-Limbu/ai-platform-skills",
+  "skills": ["./"]
+}

@@ -1,7 +1,7 @@
 ---
 name: data-squad
 description: Use when the owner names data-squad or asks to run the squad on a feature, app or pipeline. A role-based delivery checklist (requirements, design, build, QA, retro) that scales ceremony to task size, keeps the regression vault green, treats an owner-approved ticket as approval to code, land on main and deploy to qa, and always stops for owner approval before prod. Opt-in only.
-version: 1.2.3
+version: 1.2.4
 ---
 
 # Data Squad Delivery Checklist
@@ -30,6 +30,7 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
    - Non-trivial work, or work handed to another session or subagent, becomes tickets written with the `ticket-writing` skill.
 2. **Architect: design (non-trivial work only)**
    - Read the code that will change before designing.
+   - Check every platform fact the design rests on (what a tool, host or runtime supports) against its current docs, not memory.
    - Write a short plan: files to touch, data flow, risks, and the test approach. Add a diagram only when it explains more than text.
    - For a new repo, prepare the environment and CI files from `cicd-deployment`.
    - Before any code change, have a ticket the owner created or approved whose Scope covers it, or the owner's confirmation.
@@ -73,6 +74,7 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
 
 ## Changelog
 
+- 1.2.4 (2026-10-31): Architect checks platform facts against current docs. From the repo-wide review retro: the plugin plan assumed plugins load in cloud sessions; they don't.
 - 1.2.3 (2026-10-29): the retro is the session's closing step: retro, apply approved skill lessons, update docs gated on `check_docs.py`, then archive the session once nothing is lost and child sessions are checked. Owner rule.
 - 1.2.2 (2026-10-29): rule on relayed approvals and claims, from the hub session retro.
 - 1.2.1 (2026-10-29): added `project-docs` to Read next.

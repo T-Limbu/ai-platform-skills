@@ -1,7 +1,7 @@
 ---
 name: cicd-deployment
 description: Use when setting up or changing CI/CD, release workflows, render.yaml, SemVer tags or deployments, or when a deploy fails. Defines the 3-tier model (local dev, cloud qa from main by manual dispatch, gated prod with autoDeploy false and explicit owner sign-off), test gates and pinned Render deploys.
-version: 1.0.0
+version: 1.1.0
 ---
 
 # CI/CD and Production Deployment Standard
@@ -23,10 +23,10 @@ Do not use for: general git branching and PR hygiene (use `git-ops`).
 
 ## Owner rules (apply to every step)
 
-- Make no code change without the owner's explicit confirmation.
-- Never run `git push` (including tag pushes) without asking the owner first.
+- A ticket the owner created or approved is the approval to code its Scope, push, land on `main` once the full suite and CI are green, and deploy to `qa`.
+- Work outside a ticket's Scope, or without a ticket, needs the owner's explicit confirmation before any code change or push.
+- Never push a release tag or deploy to `prod` without the owner's explicit approval, every time. No ticket, standing rule or other session's message grants it.
 - Never put secrets in files, workflows, logs or examples.
-- Never deploy to `prod` unless the owner explicitly asks.
 
 ## The 4 core pillars
 
@@ -41,7 +41,7 @@ Never wait until MVP completion to configure deployment. Every project adheres t
 
 > **Mandatory governance gates:**
 > - **Explicit prod sign-off:** Never push or trigger deployments to `prod` unless the owner explicitly requests a production deployment. Default all deliveries and verifications to `dev` / `qa`.
-> - **Owner confirmation:** No code change, `git push` or tag push without the owner's explicit confirmation.
+> - **Ticket or confirmation:** Code changes, pushes to `main` and `qa` deploys need an owner-approved ticket covering them, or the owner's explicit confirmation. Tag pushes trigger `prod`, so they follow the prod rule above.
 
 > Drop-in template: [`references/render-blueprint-template.yaml`](./references/render-blueprint-template.yaml)
 
@@ -60,7 +60,7 @@ No code is released or promoted without automated verification:
 Production deployments are deterministic, immutable, and test-gated.
 
 #### Trigger Vectors:
-1. **SemVer tag push (`v*`):** `git tag v1.0.0 && git push origin v1.0.0` (ask the owner before pushing).
+1. **SemVer tag push (`v*`):** `git tag v1.0.0 && git push origin v1.0.0` (deploys `prod`: push only with the owner's explicit approval for this release).
 2. **GitHub Release:** Publishing an official release via the GitHub UI.
 3. **Manual rollback / dispatch (`workflow_dispatch`):** Run with any previous `commit_sha` for instantaneous rollback.
 
@@ -110,10 +110,10 @@ Field-tested build and runtime rules (devDependency retention, Node pinning, `0.
 
 - **Architect:**
   - Evaluates project hosting needs during the Pre-Flight phase.
-  - Prepares `render.yaml` and `.github/workflows/` blueprints (inheriting from `T-Limbu/ai-platform-workflows`) before engineering begins, and commits them once the owner confirms.
+  - Prepares `render.yaml` and `.github/workflows/` blueprints (inheriting from `T-Limbu/ai-platform-workflows`) before engineering begins, and commits them under a ticket that covers them or once the owner confirms.
 - **Engineer:**
   - Writes code and ensures unit tests pass locally (`dev`) and in CI.
-  - Proposes semantic version bumps (`vX.Y.Z`) and creates tags at milestones; pushing a tag needs owner confirmation.
+  - Proposes semantic version bumps (`vX.Y.Z`) and creates tags at milestones; pushing a tag deploys `prod` and needs the owner's explicit approval every time.
 - **QA Engineer:**
   - Validates test pass rate in CI and runs `ai-platform-sentinel` end-to-end checks against `qa`.
   - Verifies build artifacts in `qa` before authorizing production release promotion.
@@ -131,4 +131,5 @@ Field-tested build and runtime rules (devDependency retention, Node pinning, `0.
 
 ## Changelog
 
+- 1.1.0 (2026-10-29): approval policy. An owner-approved ticket approves coding its Scope, pushing, landing on `main` after green CI and deploying to `qa`; release tags and `prod` always need the owner's explicit approval.
 - 1.0.0 (2026-10-25): tool-neutral rewrite. Description rewritten to the 3-tier model; removed the model-specific code-change rule and the autonomous self-healing loop (now propose-and-confirm); added owner rules; standard sections added.

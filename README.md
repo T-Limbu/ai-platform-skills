@@ -19,6 +19,8 @@
 | [`ui-ux-design`](./ui-ux-design/SKILL.md) | Modern UI/UX guidelines: 4-point spacing grid, dark-mode surface elevation, typography scale, micro-interactions, and battery preservation. | Design Standards, Ergonomics |
 | [`flight-recorder`](./flight-recorder/SKILL.md) | Mandatory in-app Black Box Flight Recorder for `qa` and mobile dogfooding builds. | QA, Mobile Diagnostics |
 | [`mobile-pwa-audio`](./mobile-pwa-audio/SKILL.md) | Background audio invariants for mobile PWAs, including the in-memory video-track demuxer. | Mobile, Audio |
+| [`project-docs`](./project-docs/SKILL.md) | Per-repo `docs/` convention (INDEX, topic docs, PROGRESS rotation), templates and the `check_docs.py` checker. | Knowledge, Hand-off |
+| [`ticket-writing`](./ticket-writing/SKILL.md) | Linear tickets as self-contained briefs for a model or subagent starting in a fresh session. | Planning, Hand-off |
 | [`token-efficiency`](./token-efficiency/SKILL.md) | Practices that cut session token use without lowering quality, and when to offer a fresh session. | Agent Workflow |
 | [`vue-daisyui-standard`](./vue-daisyui-standard/SKILL.md) | Vue 3 + Tailwind + daisyUI project layout, conventions and mobile invariants. | Frontend Architecture |
 
@@ -39,11 +41,17 @@ New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\git-ops" -Tar
 # Project level (one repo): link into <repo>\.claude\skills\ and keep the links out of git
 ```
 
-User level: `cicd-deployment`, `data-squad`, `flight-recorder`, `git-ops`, `mobile-adb`, `token-efficiency`. Project level: the UI skills in Vue repos, `mobile-pwa-audio` in the audio PWAs, `download-trending` in `ai-app-off-grid-audio` only. A running session reads skills at startup, so check new links in a fresh session.
+User level: `cicd-deployment`, `data-squad`, `flight-recorder`, `git-ops`, `mobile-adb`, `project-docs`, `ticket-writing`, `token-efficiency`. Project level: the UI skills in Vue repos, `mobile-pwa-audio` in the audio PWAs, `download-trending` in `ai-app-off-grid-audio` only. A running session reads skills at startup, so check new links in a fresh session.
 
 ### Antigravity: one-way copy
 
 Antigravity loads skills from `~/.gemini/config/skills/`. Run `.\sync-to-local.ps1` to copy this repo there. Do not copy that folder back into the repo: it holds older, non-tool-neutral versions (the former `sync-from-local.ps1` was removed for that reason).
+
+---
+
+## Project docs
+
+This repo's own decisions, findings and session log start at [docs/INDEX.md](docs/INDEX.md) (convention: `project-docs` skill).
 
 ---
 
@@ -59,7 +67,7 @@ Antigravity loads skills from `~/.gemini/config/skills/`. Run `.\sync-to-local.p
    ---
    ```
 3. Add supporting files in `references/` or `scripts/` and link them from `SKILL.md`.
-4. Run the linter (below), then commit. Push only when the owner asks.
+4. Run the linter (below), then commit. Push only under an owner-approved ticket or when the owner asks.
 
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: git-ops
 description: Use when committing, branching, merging, rebasing, syncing branches such as main and gh-pages, recovering lost commits or stashes, or running GitHub CLI tasks (pull requests, Actions, secrets). Holds field-tested git and gh procedures and the safety rules for pushes and force-pushes.
-version: 0.1.0
+version: 0.2.2
 ---
 
 # Git-Ops & Version Control Skill
@@ -87,3 +87,15 @@ These rules were learned from real production debugging and must always be follo
 3. **Rule [Branch Verification]**: Never execute `git push` without verifying the active branch (`git branch --show-current`). Always explicitly specify the remote and branch target (e.g. `git push origin main`), never bare `git push`.
 4. **Rule [Never Force Push on Shared Branches]**: Avoid `git push --force` on `main`, `master`, or `gh-pages`. Use `--force-with-lease` only when resolving rebases on personal feature branches.
 5. **Rule [Self-Documenting Learnings]**: Whenever a tricky git collision, detached HEAD, or remote divergence is resolved in a session, append the root cause and solution to this "Rules from Learning" section.
+6. **Rule [One Topic per Branch]**: When a request changes topic mid-branch (for example a policy change arriving on a docs-skill branch), start a new branch from `main` for it, so each pull request reviews one thing.
+7. **Rule [One Commit per Command]**: Make each commit in its own shell call and check it with `git show --stat HEAD` before the next. Chaining several `git apply` / `git commit` steps with `&&` and heredocs in one call once produced one mixed commit instead of three. Recovery: `git reset <base>` keeps the working tree; then redo the commits one by one.
+8. **Rule [Split Overlapping Work with the Index]**: When later work touches the same files as earlier uncommitted work, stage the earlier part, keep the later part in the working tree, and save one patch per part. Check the patches apply in order on a scratch index (`GIT_INDEX_FILE=<tmp> git read-tree HEAD`, then `git apply --cached`) before relying on them.
+9. **Rule [One Worktree per Session]**: Each ticket session works in its own git worktree (`git worktree add ../<repo>-<ticket> -b <branch> main`, or the app's worktree option), never in a checkout another session is using. A ticket session once switched branches in a shared checkout and left uncommitted edits under a running session.
+10. **Rule [Check for Junctions Before Deleting]**: On Windows, check `(Get-Item <dir>).LinkType` before deleting a folder. Skill folders in app repos can be junctions to the hub, and deleting one recursively deletes the hub's files. Remove a junction with `cmd /c rmdir <dir>`, which removes only the link.
+11. **Rule [PowerShell 5.1 and gh Bodies]**: Write PR and issue bodies to a file and pass `--body-file <file>`. Windows PowerShell 5.1 splits a quoted multi-line `--body` string into several arguments.
+
+## Changelog
+
+- 0.2.2 (2026-10-31): rules 10-11 (check for junctions before deleting; `--body-file` in PowerShell 5.1), from the repo-wide review retro.
+- 0.2.1 (2026-10-29): rule 9, one worktree per session, from the Shuttle Feed retro.
+- 0.2.0 (2026-10-29): rules 6-8 from the hub session retro (one topic per branch, one commit per command, splitting overlapping work with the index).

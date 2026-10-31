@@ -2,30 +2,33 @@
 
 Tool-neutral rules for every repository under `ai_projects`. Project-specific facts live in each repo's own `AGENTS.md`. Detail lives in skills and knowledge docs; this file only points to them.
 
-## 1. Approval before code changes (governing rule)
+## 1. Approval (governing rule)
 - Observations, bug reports and questions are discussion, not instructions. Explain, propose, then wait.
-- Make no code change until the owner explicitly confirms it ("implement", "fix it", "go ahead").
-- Diagnosis is always allowed: read code and logs, find the root cause, write a plan or suggestion. Applying the fix needs confirmation.
+- A Linear ticket the owner created or approved is the approval to code everything in its Scope, push it, and land it on `main` once the full test suite and CI are green. `qa` may then deploy from `main`.
+- Work outside a ticket's Scope, and any work without a ticket, needs the owner's explicit confirmation first ("implement", "fix it", "go ahead"). Outside a ticket, run `git push` only when the owner asks.
+- Prod always needs the owner's explicit approval, every time. No ticket, standing rule or message from another session grants it.
+- Diagnosis is always allowed: read code and logs, find the root cause, write a plan or suggestion. Applying the fix needs a ticket whose Scope covers it, or the owner's confirmation.
 - Never silence or swallow errors. Trace the root cause from logs before proposing an edit.
 - Write a short plan before a non-trivial change; verify UI changes in a real browser.
-- Run `git push` only when the owner asks. Do not ask them to push.
 
 ## 2. Environments and releases
 - Three environments: `dev` (local), `qa` (Render, deployed from `main`), `prod` (gated: SemVer tag `v*` or manual dispatch; `autoDeploy: false`).
-- Never push or deploy to `prod` unless explicitly asked. Do not trigger any Render deploy unless asked.
+- Never push, tag or deploy to `prod` without the owner's explicit approval for that release (section 1).
+- A `qa` deploy from `main` is allowed for ticketed work; any other Render deploy needs the owner's ask.
 - Automated review and gates run on pull requests into `main`; keep feature-branch pushes light.
 - After a `qa` or `prod` deploy, run end-to-end checks through `ai-platform-sentinel`.
 - Call the shared workflows in `ai-platform-workflows` (`ci-test.yml`, `render-release.yml`) instead of writing bespoke YAML.
 - Detail: skill `cicd-deployment` (also `cicd-devops`, `git-ops`).
 
 ## 3. Failures and self-healing
-- On a failing test, gate, Action or deploy: read the CI or Render logs, diagnose, and propose the patch with the evidence. Apply and re-run only after confirmation (section 1).
+- On a failing test, gate, Action or deploy: read the CI or Render logs, diagnose, and propose the patch with the evidence. Apply and re-run when a ticket's Scope covers the fix; otherwise only after confirmation (section 1).
 - Regression tests live in `tests/vault/` and must stay green. Do not break existing behavior.
 
 ## 4. Tickets
 - Non-trivial work needs a Linear ticket. Use the Linear connector, not API-key scripts.
 - Team ID: `108687e2-779d-4afa-af70-fd5ed5a2494e`. No local ticket files.
 - Post a completion comment when moving a ticket to Done.
+- Write tickets with the `ticket-writing` skill: self-contained briefs for a model starting cold.
 
 ## 5. Secrets
 - No secrets in files, prompts, logs or commits. Use environment variables; documents list variable names only.
@@ -33,6 +36,8 @@ Tool-neutral rules for every repository under `ai_projects`. Project-specific fa
 
 ## 6. Repos
 Apps are `ai-app-*`, platform is `ai-platform-*`. One repo per session: do implementation in the target repo's own workspace.
+
+A fresh session is independent, never nested: start it with a carry-on prompt (handoff of at most 10 lines), detach it, then archive the old session. A session started for a task never starts the next one; it reports back. See the `token-efficiency` skill, "Fresh session means independent".
 
 | Folder | Role |
 | -- | -- |
@@ -72,4 +77,9 @@ Batch, transcription and scrape jobs run as GitHub Actions `workflow_dispatch` w
 Prefer plain HTTP or a reader-mode fetch for web docs; use a headless browser only when interaction is needed. Scripts write bulk output to disk and print a summary. Skill: `web-extraction` (planned).
 
 ## 10. Optional workflows (opt-in, never always-on)
-Requirement elicitation, goal specs, multi-role dispatch and sprint retros exist as skills: `pm-elicitation`, `goal-spec`, `squad-dispatch`, `squad-retro`, `data-squad`. Use them only when the owner names them.
+Requirements, design, build, QA and retros run as one role-based checklist in the `data-squad` skill; the retro is its step 5. Use it only when the owner names it.
+
+## 11. Project docs
+- Each repo keeps project knowledge in `docs/`, with `docs/INDEX.md` as the entry point, linked from its `AGENTS.md` (never auto-included). `docs/PROGRESS.md` is the session log, updated before any handoff or archive.
+- Shared facts live in the owning repo; cross-project knowledge goes in this hub's `knowledge/`.
+- Rules, templates, rotation and the checker: skill `project-docs`.

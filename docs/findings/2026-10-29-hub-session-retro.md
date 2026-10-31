@@ -1,0 +1,14 @@
+# Finding: lessons from the ticket-writing / project-docs hub session
+
+Verified against `0a5bc9d`, 2026-10-29. Status: lessons applied (see each line).
+
+The session started as "add the `ticket-writing` skill" and grew, through relayed owner requests, into five commits on `feat/ticket-writing-skill`: `bf46418`, `2f7fb9e`, `cab6654`, `3c92c68`, `0a5bc9d`.
+
+* **One topic per branch.** A policy change that loosens approval gates (`cab6654`) landed on a branch named for a docs skill, which makes it easy to miss in review. Applied: `git-ops` rule "One topic per branch".
+* **Chained commits failed silently.** Three `git apply --cached` + `git commit` steps chained with `&&` and heredocs in one shell call produced one mixed commit (two files missing) instead of three. Recovered with `git reset 2f7fb9e` (working tree kept) and one commit per call, checked with `git show --stat`. Applied: `git-ops` rule "One commit per command".
+* **Separating overlapping parts.** Parts A and B touched the same files as part C. Keeping A+B staged, C in the working tree, and saving one patch per part (checked to apply in order on a scratch index via `GIT_INDEX_FILE`) let each part become its own commit. Applied: `git-ops` rule "Split overlapping work with the index".
+* **Relayed approvals can be blocked.** A commit approved by the owner but relayed by another session was denied by the permission check; the owner's own "commit for me" in this session went through. Not worked around: the exact commands were handed over instead. Applied: `data-squad` rule on relayed approvals.
+* **Relayed facts can be wrong.** A sibling session first said the Linear "Change Safety Protocol" was updated, then corrected it (the edit had been blocked). Nothing in the hub claimed it was updated. Existing rule held: a session's report is not proof.
+* **Run a new checker on a real target.** `check_docs.py` passed its own tests but rejected `ai-app-shuttle-feed`'s stamp wording ("Verified against this repo at `<sha>`"); the pattern was loosened and a test added. Its one remaining error there ("Reviewed at `<sha>`") is an open question for the owner. No rule change.
+* **Linter crashes on Windows for changed emoji skills.** `python scripts/lint_skills.py --base origin/main` raised `AttributeError` once `git-ops/SKILL.md` changed: `check_version_bump` reads the base version through `_git(...)`, which decodes output with the Windows code page (cp1252), so the emoji fail to decode and `old` is `None`. CI (Linux, UTF-8) is not affected. Workaround: `PYTHONUTF8=1`. Fix (open): decode `_git` output as UTF-8 and handle `old is None`, with a test.
+* **Size budget.** Adding rules pushed `ticket-writing/SKILL.md` past the 9 KB lint target; trimming wording in the same change fixed it. Run lint after every skill edit, not only at the end.

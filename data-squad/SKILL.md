@@ -1,7 +1,7 @@
 ---
 name: data-squad
 description: Use when the owner names data-squad or asks to run the squad on a feature, app or pipeline. A role-based delivery checklist (requirements, design, build, QA, retro) that scales ceremony to task size, keeps the regression vault green, treats an owner-approved ticket as approval to code, land on main and deploy to qa, and always stops for owner approval before prod. Opt-in only.
-version: 1.2.6
+version: 1.2.7
 ---
 
 # Data Squad Delivery Checklist
@@ -44,6 +44,7 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
    - Pragmatic quality gate: block on correctness, security and regressions; list cosmetic nits without blocking.
    - Add the tests that prove the feature to `tests/vault/` so it stays protected.
    - Builds for `qa` or staging include the in-app recorder (`flight-recorder`).
+   - UI changes pass the layout check (`layout-check` in `ai-platform-workflows`, run at 320 to 1440 px). Report-only until the app's check is set to blocking.
    - On a failure, give reproduction steps and logs, diagnose the root cause, and propose the fix; apply it when the ticket's Scope covers it, otherwise after confirmation.
 5. **Scrum Master: retro (the session's closing step)**, in this order:
    1. The retro in a few lines: what shipped, what took longest, and any lesson worth keeping. Propose a lesson as a rule change to the relevant skill only if it recurred or was costly.
@@ -75,6 +76,7 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
 
 ## Changelog
 
+- 1.2.7 (2026-11-05): QA step requires UI changes to pass the layout check. Owner approved after the Oplox responsive-layout pilot.
 - 1.2.6 (2026-11-05): a question gets an answer and a proposal, then a stop; no edit, branch, commit or PR until the owner says go. From an Oplox session that opened an unrequested PR.
 - 1.2.5 (2026-10-31): rule on fresh, independent sessions: detach after starting, no chained next sessions, retro runs in the current session. Owner request; models forgot the global rule.
 - 1.2.4 (2026-10-31): Architect checks platform facts against current docs. From the repo-wide review retro: the plugin plan assumed plugins load in cloud sessions; they don't.

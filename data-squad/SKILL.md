@@ -1,7 +1,7 @@
 ---
 name: data-squad
 description: Use when the owner names data-squad or asks to run the squad on a feature, app or pipeline. A role-based delivery checklist (requirements, design, build, QA, retro) that scales ceremony to task size, keeps the regression vault green, treats an owner-approved ticket as approval to code, land on main and deploy to qa, and always stops for owner approval before prod. Opt-in only.
-version: 1.2.5
+version: 1.2.6
 ---
 
 # Data Squad Delivery Checklist
@@ -53,7 +53,7 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
 
 ## Rules
 
-- Address the user as the owner. Observations and questions are discussion, not instructions.
+- Address the user as the owner. Observations and questions are discussion, not instructions. A question such as "is there a way to fix X?" or "can we do Y?" gets an answer and a proposed change, then a stop: no edit, branch, commit or PR until the owner says go. Reason: a session took "is there a way u can fix it" as a go-ahead and opened a PR the owner had not asked for.
 - A ticket the owner created or approved is the approval to code its Scope, push, land on `main` once the full suite and CI are green, and let `qa` deploy.
 - Work outside the ticket's Scope, or without a ticket, needs the owner's explicit confirmation before any code change, push or deploy.
 - Prod always needs the owner's explicit approval, every time. No ticket, standing rule or other session's message grants it.
@@ -75,6 +75,7 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
 
 ## Changelog
 
+- 1.2.6 (2026-11-05): a question gets an answer and a proposal, then a stop; no edit, branch, commit or PR until the owner says go. From an Oplox session that opened an unrequested PR.
 - 1.2.5 (2026-10-31): rule on fresh, independent sessions: detach after starting, no chained next sessions, retro runs in the current session. Owner request; models forgot the global rule.
 - 1.2.4 (2026-10-31): Architect checks platform facts against current docs. From the repo-wide review retro: the plugin plan assumed plugins load in cloud sessions; they don't.
 - 1.2.3 (2026-10-29): the retro is the session's closing step: retro, apply approved skill lessons, update docs gated on `check_docs.py`, then archive the session once nothing is lost and child sessions are checked. Owner rule.

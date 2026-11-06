@@ -1,7 +1,7 @@
 ---
 name: git-ops
 description: Use when committing, branching, merging, rebasing, syncing branches such as main and gh-pages, recovering lost commits or stashes, or running GitHub CLI tasks (pull requests, Actions, secrets). Holds field-tested git and gh procedures and the safety rules for pushes and force-pushes.
-version: 0.2.2
+version: 0.2.3
 ---
 
 # Git-Ops & Version Control Skill
@@ -93,9 +93,11 @@ These rules were learned from real production debugging and must always be follo
 9. **Rule [One Worktree per Session]**: Each ticket session works in its own git worktree (`git worktree add ../<repo>-<ticket> -b <branch> main`, or the app's worktree option), never in a checkout another session is using. A ticket session once switched branches in a shared checkout and left uncommitted edits under a running session.
 10. **Rule [Check for Junctions Before Deleting]**: On Windows, check `(Get-Item <dir>).LinkType` before deleting a folder. Skill folders in app repos can be junctions to the hub, and deleting one recursively deletes the hub's files. Remove a junction with `cmd /c rmdir <dir>`, which removes only the link.
 11. **Rule [PowerShell 5.1 and gh Bodies]**: Write PR and issue bodies to a file and pass `--body-file <file>`. Windows PowerShell 5.1 splits a quoted multi-line `--body` string into several arguments.
+12. **Rule [Check Auto-Merge Before Offering It]**: Before offering "merge when green", check whether the repo allows auto-merge (`gh api repos/<owner>/<repo> --jq .allow_auto_merge`). If it doesn't, say so straight away and ask the owner to tell you when CI finishes, then check `gh pr checks <n>` once and merge only on all-pass. In Shuttle Feed the offer failed and took three manual check rounds.
 
 ## Changelog
 
+- 0.2.3 (2026-11-06): rule 12, check auto-merge before offering "merge when green", from the KSH-347 retro.
 - 0.2.2 (2026-10-31): rules 10-11 (check for junctions before deleting; `--body-file` in PowerShell 5.1), from the repo-wide review retro.
 - 0.2.1 (2026-10-29): rule 9, one worktree per session, from the Shuttle Feed retro.
 - 0.2.0 (2026-10-29): rules 6-8 from the hub session retro (one topic per branch, one commit per command, splitting overlapping work with the index).

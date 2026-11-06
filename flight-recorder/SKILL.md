@@ -1,7 +1,7 @@
 ---
 name: flight-recorder
 description: Use when building or reviewing a client-facing app, PWA or frontend for a QA or staging environment, or when diagnosing bugs on physical phones. Specifies the mandatory in-app Black Box Flight Recorder with ring buffer, localStorage persistence, lifecycle and error capture, 1-tap copy and optional cloud telemetry.
-version: 1.1.0
+version: 1.2.0
 ---
 
 # In-App Black Box Flight Recorder Standard (Mandatory QA Feature)
@@ -138,6 +138,7 @@ export function recordFlightLog(
 Before QA sign-off on any release candidate:
 - [ ] Flight recorder is initialized on application mount.
 - [ ] Floating toggle button (`Logs`) renders and is accessible on mobile screens.
+- [ ] No control sits under the floating `Logs` button at 360 px and 390 px wide, on every tab or screen.
 - [ ] Tapping "Copy Logs" copies clean formatted text.
 - [ ] Tapping "Send to Cloud" returns a success confirmation and reaches remote telemetry store.
 - [ ] Unhandled errors and page visibility state changes appear immediately in the log list.
@@ -145,6 +146,7 @@ Before QA sign-off on any release candidate:
 ## Rules
 
 - Mandatory on every `qa`, staging or dogfooding build; never log secrets, tokens or personal data.
+- On phone widths, keep a side gutter on the button's edge at least as wide as the button plus a few pixels (for example 30 px for a 24 px button), so no control can sit under it. Re-check this after any layout change.
 - Do not edit a project to add the recorder without an owner-approved ticket covering it, or the owner's explicit confirmation.
 - Push and deploy to `qa` only under such a ticket or when the owner asks. Never deploy to `prod` without the owner's explicit approval.
 
@@ -157,5 +159,6 @@ Before QA sign-off on any release candidate:
 
 ## Changelog
 
+- 1.2.0 (2026-11-06): gutter rule and a gate check that no control sits under the `Logs` button. It covered app controls twice in Shuttle Feed (Galaxy S25 Ultra, then the KSH-347 redesign at 360 px).
 - 1.1.0 (2026-10-29): approval policy. An owner-approved ticket covers adding the recorder, pushing and the `qa` deploy; `prod` always needs the owner's explicit approval.
 - 1.0.0 (2026-10-25): tool-neutral rewrite. Added Use-when triggers, version and standard sections; removed emoji; replaced squad-agent names and the old stakeholder term with the owner.

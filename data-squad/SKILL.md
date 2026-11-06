@@ -1,7 +1,7 @@
 ---
 name: data-squad
 description: Use when the owner names data-squad or asks to run the squad on a feature, app or pipeline. A role-based delivery checklist (requirements, design, build, QA, retro) that scales ceremony to task size, keeps the regression vault green, treats an owner-approved ticket as approval to code, land on main and deploy to qa, and always stops for owner approval before prod. Opt-in only.
-version: 1.2.6
+version: 1.2.7
 ---
 
 # Data Squad Delivery Checklist
@@ -31,6 +31,7 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
 2. **Architect: design (non-trivial work only)**
    - Read the code that will change before designing.
    - Check every platform fact the design rests on (what a tool, host or runtime supports) against its current docs, not memory.
+   - Check every infrastructure fact the work depends on (a service account and its roles, whether a database or secret exists, which variables are set where) against the live console or the owner, not against a ticket or README.
    - Write a short plan: files to touch, data flow, risks, and the test approach. Add a diagram only when it explains more than text.
    - For a new repo, prepare the environment and CI files from `cicd-deployment`.
    - Before any code change, have a ticket the owner created or approved whose Scope covers it, or the owner's confirmation.
@@ -75,6 +76,7 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
 
 ## Changelog
 
+- 1.2.7 (2026-11-06): Architect checks infrastructure facts (service accounts, databases, secrets, variables) against the live console or the owner. From the Oplox KSH-346 retro: the README named a dedicated service account that did not exist, and the owner steps took many round trips.
 - 1.2.6 (2026-11-05): a question gets an answer and a proposal, then a stop; no edit, branch, commit or PR until the owner says go. From an Oplox session that opened an unrequested PR.
 - 1.2.5 (2026-10-31): rule on fresh, independent sessions: detach after starting, no chained next sessions, retro runs in the current session. Owner request; models forgot the global rule.
 - 1.2.4 (2026-10-31): Architect checks platform facts against current docs. From the repo-wide review retro: the plugin plan assumed plugins load in cloud sessions; they don't.

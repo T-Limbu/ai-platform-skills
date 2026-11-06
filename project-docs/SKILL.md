@@ -1,7 +1,7 @@
 ---
 name: project-docs
 description: Use when creating, updating or checking a repo's docs/ folder (INDEX, architecture, runbook, integrations, findings, decisions, PROGRESS), when a ticket needs a fact written down to link it, or at the end of a session that changed or learned something. Holds the docs convention, one template per doc type and a checker script.
-version: 0.1.1
+version: 0.1.2
 ---
 
 # Project Docs
@@ -63,6 +63,8 @@ Run it before a handoff or archive, and at the end of any session that changed o
 
 ## Checker
 
+The script lives in the skills repo, not in the project repo: run `python <skills-checkout>/project-docs/scripts/check_docs.py .` from the project root. If the checkout path is unknown, search for `check_docs.py` under the workspace before deciding it is missing; do not leave docs uncommitted because it was not found.
+
 [scripts/check_docs.py](scripts/check_docs.py) takes a repo root and checks: every doc is in the INDEX, relative links resolve, each topic doc has a stamp whose sha exists (warns when the named files moved more than 50 commits since), and PROGRESS stays within its limits. It prints errors and warnings separately, exits 1 on errors, and supports `--format github` for CI.
 
 ## Read next
@@ -76,5 +78,6 @@ Run it before a handoff or archive, and at the end of any session that changed o
 
 ## Changelog
 
+- 0.1.2 (2026-11-06): the Checker section says where `check_docs.py` lives and to search for it before skipping the gate. From the Oplox retro: several sessions left docs uncommitted because they could not find it.
 - 0.1.1 (2026-10-29): rule: commit docs only when `check_docs.py` exits 0, gated on the exit code rather than piped output.
 - 0.1.0 (2026-10-29): first version. Docs convention moved here from `conventions/AGENTS.md` and `ticket-writing`; templates per doc type; end-of-session wrap-up with PROGRESS rotation; `check_docs.py`.

@@ -1,7 +1,7 @@
 ---
 name: ticket-writing
 description: Use when turning a review, bug report, plan or owner request into Linear tickets that another model or subagent will pick up in a fresh session, or when splitting or refining such tickets. Each ticket is a self-contained brief (context, objective, how to build, test and run end to end, quality bar, stop points, report-back format), so a reader with none of the original conversation can deliver durable work.
-version: 0.3.6
+version: 0.3.7
 ---
 
 # Ticket Writing
@@ -34,7 +34,7 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
 4. **Pilot, then write the rest.** For a batch, write one brief first (the most complex) and take it through the cold-read test in step 6 until the verdict is yes. Apply what it taught to the other briefs before writing them. First drafts usually fail: both pilot briefs (KSH-286, KSH-289) failed their first cold read on real defects.
 5. **Write each brief** with [references/ticket-template.md](references/ticket-template.md). Fill the quality bar from [references/quality-bar.md](references/quality-bar.md): keep only the items that apply, and make each one specific to this ticket.
 6. **Cold-read test.** Before creating, give a draft to a fresh-context reviewer (a subagent with no conversation history) and ask: "What would you need to ask before starting? What would you guess?" Fix the brief until the answer is "nothing", and repeat until the verdict is yes.
-7. **Create and link.** Set the fields per the conventions below. Create blocking tickets first, so later tickets can name them.
+7. **Create and link.** Set the fields per the conventions below. Create blocking tickets first, so later tickets can name them. Mention a new ticket only after it exists, as plain `KSH-123`.
 8. **Report back** with a table of ticket links, project and priority, plus any overlap with existing tickets.
 9. **Learn from each worked ticket.** Read the reader's "Brief gaps" in its report-back: what it had to ask or guess. A gap that recurs across tickets becomes a change to the template or quality bar (with the owner's yes, as it's a skill change).
 
@@ -90,6 +90,7 @@ Do not use for: one-line fixes the owner wants done now (just do them), or track
 
 ## Changelog
 
+- 0.3.7 (2026-11-22): mention a new ticket only after it exists, as a plain ID. From KSH-354: guessed IDs gave three wrong links; a hand-written mention tag was mangled.
 - 0.3.6 (2026-10-31): tickets ending in a `qa` deploy list the secrets and variables the deploy needs, and the reader verifies they exist before starting. From the data-squad retro: `qa` deploys for KSH-300 and KSH-325 failed on missing or invalid Render secrets the tickets didn't list.
 - 0.3.5 (2026-10-31): Verify step: run the brief's commands in a clean worktree only. From the repo-wide review retro: a ticket writer's test run deleted Design Vault's untracked SQLite `-shm`/`-wal` files.
 - 0.3.4 (2026-10-29): rule and Stop points line: the reader works in its own git worktree, never in a checkout another session uses. From the Shuttle Feed retro: a ticket session switched branches and left uncommitted edits under a running session.

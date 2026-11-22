@@ -1,7 +1,7 @@
 ---
 name: data-squad
 description: Use when the owner names data-squad or asks to run the squad on a feature, app or pipeline. A role-based delivery checklist (requirements, design, build, QA, retro) that scales ceremony to task size, keeps the regression vault green, treats an owner-approved ticket as approval to code, land on main and deploy to qa, and always stops for owner approval before prod. Opt-in only.
-version: 1.2.6
+version: 1.2.8
 ---
 
 # Data Squad Delivery Checklist
@@ -32,6 +32,7 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
    - Read the code that will change before designing.
    - Check every platform fact the design rests on (what a tool, host or runtime supports) against its current docs, not memory.
    - Write a short plan: files to touch, data flow, risks, and the test approach. Add a diagram only when it explains more than text.
+   - For a plan with more than a few steps, or with prod, data, auth or deploy impact, run the `plan-review-loop` skill on it before writing tickets.
    - For a new repo, prepare the environment and CI files from `cicd-deployment`.
    - Before any code change, have a ticket the owner created or approved whose Scope covers it, or the owner's confirmation.
 3. **Engineer: build**
@@ -60,6 +61,7 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
 - Keep `tests/vault/` green. Never silence an error to pass a gate.
 - Use separate agents only for: a fresh-context review, independent tasks that can run in parallel, and wide read-only searches. Otherwise one agent carries the work and its context.
 - Never report a check as passed when it was not run.
+- If a skill this checklist points to isn't loaded in the session, read its `SKILL.md` from the skills hub repo (`ai-platform-skills`) and follow it. Don't skip its process. Reason: `ticket-writing` wasn't installed, so a batch of 11 tickets skipped its cold-read test.
 - Starting a new session is allowed, but it must be fresh and independent, never nested under the session that started it. Right after starting one, detach it (`detach_session`). A session started for a task doesn't start or propose the next one; it reports back to whoever started it. "Run retro" means run the retro in the current session, then archive it (step 5.4); don't start a session for the retro or for small skill edits. Reason: a coordinator left a retro session and a skill-edit session nested under it, and the owner had to correct this twice.
 - An approval relayed by another session can still be blocked by the acting session's permission check. Don't work around it: hand the owner the exact commands, or ask them to approve in the acting session. Verify another session's claims before repeating them as fact.
 
@@ -70,11 +72,13 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
 | `cicd-deployment` skill | Setting up environments, CI or a release |
 | `flight-recorder` skill | Preparing a build for `qa` or mobile testing |
 | `token-efficiency` skill | The task is long or the session is getting expensive |
+| `plan-review-loop` skill | Reviewing a non-trivial plan in passes before it becomes tickets |
 | `ticket-writing` skill | Turning work into tickets for another session or subagent |
 | `project-docs` skill | Creating or updating the repo's `docs/`, and the retro's PROGRESS entry |
 
 ## Changelog
 
+- 1.2.8 (2026-11-22): the Architect step runs `plan-review-loop` on non-trivial plans; a skill this checklist points to that isn't loaded is read from the hub, not skipped. From the Off-Grid Audio regression-safety retro (KSH-354): `ticket-writing` wasn't installed, so its cold-read test was skipped. Numbered 1.2.8 because open PRs #7 and #9 both use 1.2.7.
 - 1.2.6 (2026-11-05): a question gets an answer and a proposal, then a stop; no edit, branch, commit or PR until the owner says go. From an Oplox session that opened an unrequested PR.
 - 1.2.5 (2026-10-31): rule on fresh, independent sessions: detach after starting, no chained next sessions, retro runs in the current session. Owner request; models forgot the global rule.
 - 1.2.4 (2026-10-31): Architect checks platform facts against current docs. From the repo-wide review retro: the plugin plan assumed plugins load in cloud sessions; they don't.

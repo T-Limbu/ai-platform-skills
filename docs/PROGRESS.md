@@ -1,5 +1,12 @@
 # Progress
 
+## 2026-11-22 plan-review-loop skill
+
+* **Goal:** turn the review loop used to plan Off-Grid Audio regression safety (epic KSH-354) into a reusable skill, as the owner asked.
+* **Done:** new skill `plan-review-loop` 0.1.0 (SKILL.md plus `references/review-lenses.md`, `assumption-ledger.md` and `worked-example.md`); README catalog row. Branch `feat/plan-review-loop` from `origin/main`.
+* **Open:** `data-squad` doesn't point to it yet. Its Architect step should name it for non-trivial plans, but open PRs #7 and #9 both bump `data-squad` to 1.2.7, so that edit waits until they merge. The plugin `version` is unchanged (still 0.1.0, as for the other merged skill changes).
+* **Next:** owner reviews the pull request; after merge, add the `data-squad` pointer.
+
 ## 2026-10-31 KSH-304 plugin packaging
 
 * **Goal:** ship the hub as the `squad` Claude Code plugin from the `t-limbu` GitHub marketplace, and fail lint on a reference to a missing skill.

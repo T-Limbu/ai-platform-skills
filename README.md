@@ -19,6 +19,7 @@
 | [`ui-ux-design`](./ui-ux-design/SKILL.md) | Modern UI/UX guidelines: 4-point spacing grid, dark-mode surface elevation, typography scale, micro-interactions, and battery preservation. | Design Standards, Ergonomics |
 | [`flight-recorder`](./flight-recorder/SKILL.md) | Mandatory in-app Black Box Flight Recorder for `qa` and mobile dogfooding builds. | QA, Mobile Diagnostics |
 | [`mobile-pwa-audio`](./mobile-pwa-audio/SKILL.md) | Background audio invariants for mobile PWAs, including the in-memory video-track demuxer. | Mobile, Audio |
+| [`plan-review-loop`](./plan-review-loop/SKILL.md) | Repeated review passes over a plan, each against a new kind of evidence (repo, platform docs, live config, dependencies, failure paths), with an assumptions ledger and a stop rule. | Planning, Risk |
 | [`project-docs`](./project-docs/SKILL.md) | Per-repo `docs/` convention (INDEX, topic docs, PROGRESS rotation), templates and the `check_docs.py` checker. | Knowledge, Hand-off |
 | [`ticket-writing`](./ticket-writing/SKILL.md) | Linear tickets as self-contained briefs for a model or subagent starting in a fresh session. | Planning, Hand-off |
 | [`token-efficiency`](./token-efficiency/SKILL.md) | Practices that cut session token use without lowering quality, and when to offer a fresh session. | Agent Workflow |

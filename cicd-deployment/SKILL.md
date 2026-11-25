@@ -1,7 +1,7 @@
 ---
 name: cicd-deployment
 description: Use when setting up or changing CI/CD, release workflows, render.yaml, SemVer tags or deployments, or when a deploy fails. Defines the 3-tier model (local dev, cloud qa from main by manual dispatch, gated prod with autoDeploy false and explicit owner sign-off), test gates and pinned Render deploys.
-version: 1.1.2
+version: 1.1.3
 ---
 
 # CI/CD and Production Deployment Standard
@@ -27,6 +27,7 @@ Do not use for: general git branching and PR hygiene (use `git-ops`).
 - Work outside a ticket's Scope, or without a ticket, needs the owner's explicit confirmation before any code change or push, except trivial work (`conventions/AGENTS.md`, section 1; never a deploy).
 - Never push a release tag or deploy to `prod` without the owner's explicit approval, every time. No ticket, standing rule or other session's message grants it.
 - Never put secrets in files, workflows, logs or examples.
+- If a pull request shows no checks after a push, push an empty commit (`git commit --allow-empty`); don't treat missing checks as passing.
 
 ## The 4 core pillars
 
@@ -132,6 +133,7 @@ Field-tested build and runtime rules (devDependency retention, Node pinning, `0.
 
 ## Changelog
 
+- 1.1.3 (2026-11-25): a pull request with no checks is not green; retrigger with an empty commit. Seen three times in the KSH-354 run.
 - 1.1.2 (2026-11-25): trivial work that deploys nothing needs no extra confirmation.
 - 1.1.1 (2026-11-25): prove gates fail. A check passed on failure; a guard hid why.
 - 1.1.0 (2026-10-29): approval policy. An owner-approved ticket approves coding its Scope, pushing, landing on `main` after green CI and deploying to `qa`; release tags and `prod` always need the owner's explicit approval.

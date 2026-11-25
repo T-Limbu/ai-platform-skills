@@ -1,7 +1,7 @@
 ---
 name: data-squad
 description: Use when the owner names data-squad or asks to run the squad on a feature, app or pipeline. A role-based delivery checklist (requirements, design, build, QA, retro) that scales ceremony to task size, keeps the regression vault green, treats an owner-approved ticket as approval to code, land on main and deploy to qa, and always stops for owner approval before prod. Opt-in only.
-version: 1.2.7
+version: 1.2.8
 ---
 
 # Data Squad Delivery Checklist
@@ -55,7 +55,9 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
 
 - Address the user as the owner. Observations and questions are discussion, not instructions. A question such as "is there a way to fix X?" or "can we do Y?" gets an answer and a proposed change, then a stop: no edit, branch, commit or PR until the owner says go. Reason: a session took "is there a way u can fix it" as a go-ahead and opened a PR the owner had not asked for.
 - A ticket the owner created or approved is the approval to code its Scope, push, land on `main` once the full suite and CI are green, and let `qa` deploy.
-- Work outside the ticket's Scope, or without a ticket, needs the owner's explicit confirmation before any code change, push or deploy.
+- Work outside the ticket's Scope, or without a ticket, needs the owner's explicit confirmation before any code change, push or deploy, unless it is trivial (next rule).
+- Trivial work the owner asked for runs end to end without further prompts: change, checks, push and merge once checks pass. Trivial means small, easy to undo and low-risk, such as a docs or wording fix, an obvious few-line fix, or cleaning up your own branches. If unsure, treat it as critical. Never trivial: prod, deploys, secrets or credentials, auth or security, permissions or approval rules, stored data, deleting anything you did not create, or work with a decision only the owner can make.
+- Critical work takes one approval for the whole job: list the steps and every owner-only step up front, then run every step the approval covers without asking again. Stop only for what it does not cover, an owner-only step, or a failed check. End by saying what you did, not by waiting to be prompted.
 - Prod always needs the owner's explicit approval, every time. No ticket, standing rule or other session's message grants it.
 - Keep `tests/vault/` green. Never silence an error to pass a gate.
 - Use separate agents only for: a fresh-context review, independent tasks that can run in parallel, and wide read-only searches. Otherwise one agent carries the work and its context.
@@ -76,6 +78,7 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
 
 ## Changelog
 
+- 1.2.8 (2026-11-25): trivial requested work runs end to end; critical work takes one approval for the whole job, with owner steps listed up front. Owner request after having to prompt each step.
 - 1.2.7 (2026-11-25): try owner-run commands before handing them over and verify the result. From the infra retro: a wrapper rejected piped input, so prod secrets the owner believed were stored never were.
 - 1.2.6 (2026-11-05): a question gets an answer and a proposal, then a stop; no edit, branch, commit or PR until the owner says go. From an Oplox session that opened an unrequested PR.
 - 1.2.5 (2026-10-31): rule on fresh, independent sessions: detach after starting, no chained next sessions, retro runs in the current session. Owner request; models forgot the global rule.

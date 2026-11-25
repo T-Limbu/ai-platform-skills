@@ -32,7 +32,8 @@ Tool-neutral rules for every repository under `ai_projects`. Project-specific fa
 
 ## 5. Secrets
 - No secrets in files, prompts, logs or commits. Use environment variables; documents list variable names only.
-- Secrets management is SOPS + Age (`ai-platform-infra`); Gitleaks runs pre-commit. Never commit `.env` or key material.
+- Secrets are moving to Doppler, app by app. For Render services the flow is Doppler -> Pulumi (`infra`) -> Render; a service not yet moved keeps encrypted Pulumi config in `infra`. Never edit Render env vars in the dashboard.
+- Gitleaks runs pre-commit. Never commit `.env` or key material.
 
 ## 6. Repos
 Apps are `ai-app-*`, platform is `ai-platform-*`. One repo per session: do implementation in the target repo's own workspace.
@@ -52,10 +53,11 @@ A fresh session is independent, never nested: start it with a carry-on prompt (h
 | ai-platform-agents | Multi-agent orchestration runtime |
 | ai-platform-design-vault | Design reference library and MCP server |
 | ai-platform-hq | Planning hub and project registry |
-| ai-platform-infra | Secrets and deployment blueprints |
+| ai-platform-infra | Being retired; only `fleet.json` is still used. Add nothing there |
 | ai-platform-sentinel | Post-deploy validation |
 | ai-platform-skills | Hub: skills, knowledge, conventions |
 | ai-platform-workflows | Reusable GitHub Actions |
+| infra | Infrastructure as code (Pulumi): Render services and their secrets |
 | oplox | Workspace hub portal (local folder; target name `ai-platform-oplox`, rename pending) |
 
 Live Render URLs and the GitHub repo already use `ai-platform-oplox`. Do not change them.

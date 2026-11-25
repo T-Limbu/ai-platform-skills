@@ -1,7 +1,7 @@
 ---
 name: cicd-deployment
 description: Use when setting up or changing CI/CD, release workflows, render.yaml, SemVer tags or deployments, or when a deploy fails. Defines the 3-tier model (local dev, cloud qa from main by manual dispatch, gated prod with autoDeploy false and explicit owner sign-off), test gates and pinned Render deploys.
-version: 1.1.0
+version: 1.1.1
 ---
 
 # CI/CD and Production Deployment Standard
@@ -53,6 +53,7 @@ No code is released or promoted without automated verification:
 - Executes linters (`eslint`, `ruff`, etc.) and unit/integration test suites (`vitest`, `pytest`, `unittest`).
 - **Automated PR Code Review Gate:** When a PR targets `main`, an automated code review job inspects git diffs, security boundaries, and regression safety. Bypassed for internal dev pushes; strictly enforced on PRs to `main`.
 - **Strict Quality Gate:** Any failing test or rejected review halts execution and blocks merging.
+- **Prove gates fail:** feed each new or changed gate a bad input (never one that can deploy); it must fail and say why. Piped steps need `set -o pipefail`.
 
 ---
 
@@ -79,7 +80,7 @@ Production deployments are deterministic, immutable, and test-gated.
    ```
 7. **Audit Report:** Emits a rich markdown summary into `$GITHUB_STEP_SUMMARY`.
 
-> Centralized Reusable Actions: Available in [`T-Limbu/ai-platform-workflows`](https://github.com/T-Limbu/ai-platform-workflows) (`ci-test.yml` and `render-release.yml`).
+> Reusable actions: [`T-Limbu/ai-platform-workflows`](https://github.com/T-Limbu/ai-platform-workflows) (`ci-test.yml` and `render-release.yml`).
 > Drop-in template: [`references/release-workflow-template.yml`](./references/release-workflow-template.yml)
 
 ---
@@ -131,5 +132,6 @@ Field-tested build and runtime rules (devDependency retention, Node pinning, `0.
 
 ## Changelog
 
+- 1.1.1 (2026-11-25): prove gates fail. A check passed on failure; a guard hid why.
 - 1.1.0 (2026-10-29): approval policy. An owner-approved ticket approves coding its Scope, pushing, landing on `main` after green CI and deploying to `qa`; release tags and `prod` always need the owner's explicit approval.
 - 1.0.0 (2026-10-25): tool-neutral rewrite. Description rewritten to the 3-tier model; removed the model-specific code-change rule and the autonomous self-healing loop (now propose-and-confirm); added owner rules; standard sections added.

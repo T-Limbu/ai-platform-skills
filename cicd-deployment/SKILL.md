@@ -1,7 +1,7 @@
 ---
 name: cicd-deployment
 description: Use when setting up or changing CI/CD, release workflows, render.yaml, SemVer tags or deployments, or when a deploy fails. Defines the 3-tier model (local dev, cloud qa from main by manual dispatch, gated prod with autoDeploy false and explicit owner sign-off), test gates and pinned Render deploys.
-version: 1.1.1
+version: 1.1.2
 ---
 
 # CI/CD and Production Deployment Standard
@@ -24,7 +24,7 @@ Do not use for: general git branching and PR hygiene (use `git-ops`).
 ## Owner rules (apply to every step)
 
 - A ticket the owner created or approved is the approval to code its Scope, push, land on `main` once the full suite and CI are green, and deploy to `qa`.
-- Work outside a ticket's Scope, or without a ticket, needs the owner's explicit confirmation before any code change or push.
+- Work outside a ticket's Scope, or without a ticket, needs the owner's explicit confirmation before any code change or push, except trivial work (`conventions/AGENTS.md`, section 1; never a deploy).
 - Never push a release tag or deploy to `prod` without the owner's explicit approval, every time. No ticket, standing rule or other session's message grants it.
 - Never put secrets in files, workflows, logs or examples.
 
@@ -41,7 +41,7 @@ Never wait until MVP completion to configure deployment. Every project adheres t
 
 > **Mandatory governance gates:**
 > - **Explicit prod sign-off:** Never push or trigger deployments to `prod` unless the owner explicitly requests a production deployment. Default all deliveries and verifications to `dev` / `qa`.
-> - **Ticket or confirmation:** Code changes, pushes to `main` and `qa` deploys need an owner-approved ticket covering them, or the owner's explicit confirmation. Tag pushes trigger `prod`, so they follow the prod rule above.
+> - **Ticket or confirmation:** Code changes, pushes to `main` and `qa` deploys need an owner-approved ticket covering them, or the owner's explicit confirmation (trivial changes that deploy nothing excepted). Tag pushes trigger `prod`, so they follow the prod rule above.
 
 > Drop-in template: [`references/render-blueprint-template.yaml`](./references/render-blueprint-template.yaml)
 
@@ -132,6 +132,7 @@ Field-tested build and runtime rules (devDependency retention, Node pinning, `0.
 
 ## Changelog
 
+- 1.1.2 (2026-11-25): trivial work that deploys nothing needs no extra confirmation.
 - 1.1.1 (2026-11-25): prove gates fail. A check passed on failure; a guard hid why.
 - 1.1.0 (2026-10-29): approval policy. An owner-approved ticket approves coding its Scope, pushing, landing on `main` after green CI and deploying to `qa`; release tags and `prod` always need the owner's explicit approval.
 - 1.0.0 (2026-10-25): tool-neutral rewrite. Description rewritten to the 3-tier model; removed the model-specific code-change rule and the autonomous self-healing loop (now propose-and-confirm); added owner rules; standard sections added.

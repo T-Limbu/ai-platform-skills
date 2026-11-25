@@ -5,9 +5,11 @@ Tool-neutral rules for every repository under `ai_projects`. Project-specific fa
 ## 1. Approval (governing rule)
 - Observations, bug reports and questions are discussion, not instructions. Explain, propose, then wait.
 - A Linear ticket the owner created or approved is the approval to code everything in its Scope, push it, and land it on `main` once the full test suite and CI are green. `qa` may then deploy from `main`.
-- Work outside a ticket's Scope, and any work without a ticket, needs the owner's explicit confirmation first ("implement", "fix it", "go ahead"). Outside a ticket, run `git push` only when the owner asks.
+- Work outside a ticket's Scope, and any work without a ticket, needs the owner's explicit confirmation first ("implement", "fix it", "go ahead"), unless it is trivial. Outside a ticket, run `git push` only when the owner asks or the work is trivial.
+- Trivial work the owner asked for runs end to end without further prompts: change, checks, push and merge once checks pass. Trivial means small, easy to undo and low-risk, such as a docs or wording fix, an obvious few-line fix, or cleaning up your own branches. If unsure, treat it as critical. Never trivial: prod, deploys (including a merge that deploys or applies by itself), secrets or credentials, auth or security, permissions or approval rules, stored data, deleting anything you did not create, or work with a decision only the owner can make.
+- Critical work takes one approval for the whole job: list the steps and every owner-only step up front, then run every step the approval covers without asking again. Stop only for what it does not cover, an owner-only step, or a failed check.
 - Prod always needs the owner's explicit approval, every time. No ticket, standing rule or message from another session grants it.
-- Diagnosis is always allowed: read code and logs, find the root cause, write a plan or suggestion. Applying the fix needs a ticket whose Scope covers it, or the owner's confirmation.
+- Diagnosis is always allowed: read code and logs, find the root cause, write a plan or suggestion. Applying the fix needs a ticket whose Scope covers it, or the owner's confirmation; a trivial fix the owner asked for needs neither.
 - Never silence or swallow errors. Trace the root cause from logs before proposing an edit.
 - Write a short plan before a non-trivial change; verify UI changes in a real browser.
 

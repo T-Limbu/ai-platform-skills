@@ -1,7 +1,7 @@
 ---
 name: data-squad
 description: Use when the owner names data-squad or asks to run the squad on a feature, app or pipeline. A role-based delivery checklist (requirements, design, build, QA, retro) that scales ceremony to task size, keeps the regression vault green, treats an owner-approved ticket as approval to code, land on main and deploy to qa, and always stops for owner approval before prod. Opt-in only.
-version: 1.2.9
+version: 1.2.10
 ---
 
 # Data Squad Delivery Checklist
@@ -38,6 +38,7 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
    - Commit or stash a clean checkpoint before editing.
    - Write the code and the unit tests for it together. No new code ships untested.
    - Run the narrowest tests while iterating, then the full suite once.
+   - As soon as the local checks pass, commit the work to the ticket branch, and push it when pushing is already approved, before review or further testing. An interrupted session then loses nothing.
 4. **QA: verify**
    - Check every acceptance criterion, in the real app for UI changes, not just in tests.
    - Prefer a reviewer with fresh context (one that did not write the code) for anything non-trivial.
@@ -63,6 +64,8 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
 - Use separate agents only for: a fresh-context review, independent tasks that can run in parallel, and wide read-only searches. Otherwise one agent carries the work and its context.
 - Never report a check as passed when it was not run.
 - Before handing the owner a command to run, try it the way they will run it (same shell and wrapper, including piped or prompted input, as a dry run or with dummy values). After they run it, verify the result before building on it.
+- A script the owner runs checks its prerequisites before doing anything (including asking for a sign-in), says what to run first, and shows the underlying error when a call fails, without printing secrets.
+- When an owner step is interactive (sign-in, verification code, hidden prompt), offer to start the command in the app's terminal and read its output; the owner types the code or secret there, never in chat.
 - Starting a new session is allowed, but it must be fresh and independent, never nested under the session that started it. Right after starting one, detach it (`detach_session`). A session started for a task doesn't start or propose the next one; it reports back to whoever started it. "Run retro" means run the retro in the current session, then archive it (step 5.4); don't start a session for the retro or for small skill edits. Reason: a coordinator left a retro session and a skill-edit session nested under it, and the owner had to correct this twice.
 - An approval relayed by another session can still be blocked by the acting session's permission check. Don't work around it: hand the owner the exact commands, or ask them to approve in the acting session. Verify another session's claims before repeating them as fact.
 
@@ -78,6 +81,7 @@ Scale each step to the size of the task. A small feature may need only steps 1, 
 
 ## Changelog
 
+- 1.2.10 (2026-11-28): commit a checkpoint once local checks pass; owner-run scripts check prerequisites and show the real error; offer to start interactive owner steps in the terminal. From the infra Firebase retro: interruptions left a whole build uncommitted, a script run too early gave no reason, and sign-ins sat unfinished.
 - 1.2.9 (2026-11-25): aligned with `conventions/AGENTS.md` on trivial work.
 - 1.2.8 (2026-11-25): trivial requested work runs end to end; critical work takes one approval for the whole job, with owner steps listed up front. Owner request after having to prompt each step.
 - 1.2.7 (2026-11-25): try owner-run commands before handing them over and verify the result. From the infra retro: a wrapper rejected piped input, so prod secrets the owner believed were stored never were.
